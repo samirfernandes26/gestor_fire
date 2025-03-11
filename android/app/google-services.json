@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358228309121",
+    "project_id": "painelteste-aa1d8",
+    "storage_bucket": "painelteste-aa1d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358228309121:android:d55e36655bf01f482b0980",
+        "android_client_info": {
+          "package_name": "com.gestor_fire.gestor_fire"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0p5JdfhycEn7T5elGyt-AAes1hrg6x6Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
