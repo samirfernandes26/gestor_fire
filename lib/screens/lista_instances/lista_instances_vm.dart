@@ -1,4 +1,5 @@
 import 'package:gestor_fire/screens/lista_instances/lista_instances_state.dart';
+import 'package:gestor_fire/shared/model/instancia_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -10,23 +11,12 @@ class ListaInstancesVm extends _$ListaInstancesVm {
   ListaInstancesState build() => ListaInstancesState.initial();
 
   Future<void> loadData() async {
-    // final municipiosSnapshot =
-    //     await FirebaseFirestore.instance.collection('instances').get();
+    List<InstanciaModel> instancias = await listarInstancias();
 
-    final docRef = FirebaseFirestore.instance
-        .collection('instances')
-        .doc('barra_longa');
-
-    var docSnapshot = await docRef.get();
-
-    if (docSnapshot.exists) {
-      final data = docSnapshot.data() as Map<String, dynamic>;
-    }
-
-    final teste = 1;
+    state = state.copyWith(instancias: instancias);
   }
 
-  Future<List<Map<String, dynamic>>> listarInstancias() async {
+  Future<List<InstanciaModel>> listarInstancias() async {
     // 1. Referência à coleção "instances"
     final instancesRef = FirebaseFirestore.instance.collection('instances');
 
@@ -34,7 +24,8 @@ class ListaInstancesVm extends _$ListaInstancesVm {
     final querySnapshot = await instancesRef.get();
 
     // 3. Cria uma lista para armazenar as instâncias
-    final List<Map<String, dynamic>> listaInstancias = [];
+
+    final List<InstanciaModel> instancias = [];
 
     // 4. Para cada documento da coleção "instances"
     for (var doc in querySnapshot.docs) {
@@ -62,10 +53,10 @@ class ListaInstancesVm extends _$ListaInstancesVm {
       };
 
       // 8. Adiciona à lista
-      listaInstancias.add(instanciaMap);
+      instancias.add(InstanciaModel.fromJson(instanciaMap));
     }
 
     // 9. Retorna a lista contendo todas as instâncias com seus settings
-    return listaInstancias;
+    return instancias;
   }
 }

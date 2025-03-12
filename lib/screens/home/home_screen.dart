@@ -4,6 +4,7 @@ import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/widgets/buttons/button/button.dart';
 import 'package:gestor_fire/core/ui/widgets/loaders/app_loader/app_loader.dart';
 import 'package:gestor_fire/screens/home/home_vm.dart';
+import 'package:gestor_fire/shared/infra/routes/route_generator.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -48,6 +49,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   colorButton: Colors.blueAccent,
                   onPressed: () async {
                     testeFire();
+                  },
+                ),
+                const SizedBox(height: 16),
+                Button(
+                  textButton: 'Teste',
+                  fontWeight: FontWeight.w700,
+                  colorText: Colors.white,
+                  colorButton: Colors.green,
+                  onPressed: () async {
+                    context.navigator.pushNamed(
+                      RouteGeneratorKeys.listaInstances,
+                    );
                   },
                 ),
               ],
