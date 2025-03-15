@@ -16,7 +16,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final HomeVm(:testeFire) = ref.read(homeVmProvider.notifier);
+    final HomeVm(:testeFire, :addUsuarios) = ref.read(homeVmProvider.notifier);
 
     return PopScope(
       canPop: false,
@@ -48,7 +48,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   colorText: Colors.white,
                   colorButton: Colors.blueAccent,
                   onPressed: () async {
-                    testeFire();
+                    // testeFire();
+                    addUsuarios();
                   },
                 ),
                 const SizedBox(height: 16),

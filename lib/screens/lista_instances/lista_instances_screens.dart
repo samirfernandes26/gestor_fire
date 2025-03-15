@@ -42,7 +42,7 @@ class _ListaInstancesScreenState extends ConsumerState<ListaInstancesScreen> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(title: const Text('Instancias')),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           onPressed: () async {

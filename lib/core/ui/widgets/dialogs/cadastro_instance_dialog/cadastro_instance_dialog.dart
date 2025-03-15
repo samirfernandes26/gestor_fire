@@ -29,8 +29,6 @@ class CadastroInstanceDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.speed, color: Colors.blueAccent, size: 40),
-                const SizedBox(height: 16),
                 Text(
                   'Cadastro de instancia',
                   style: const TextStyle(

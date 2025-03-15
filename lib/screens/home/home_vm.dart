@@ -31,13 +31,9 @@ class HomeVm extends _$HomeVm {
     //   final data = docSnapshot.data() as Map<String, dynamic>;
     // }
 
-    // await adicionarCaratinga();
-
     // await atualizarConfiguracaoDocsSeparados();
 
     // await adicionarNovidadeVersao();
-
-    await listarInstancias();
 
     // for (var doc in municipiosSnapshot.docs) {
     //   print(doc.data());
@@ -52,45 +48,25 @@ class HomeVm extends _$HomeVm {
     await docRef.update({'cidade': novoNome});
   }
 
-  Future<void> adicionarCaratinga() async {
+  Future<void> addUsuarios() async {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+
     // 1. Cria o documento "caratinga" na coleção "instances" com os campos básicos.
-    final instancesRef = FirebaseFirestore.instance.collection('instances');
-    await instancesRef.doc('caratinga').set({
+    final instancesRef = FirebaseFirestore.instance.collection('usuarios');
+    final settingsRef = instancesRef.doc('samir_fenandes').collection('logs');
+
+    await settingsRef.doc(timestamp.toString()).set({
+      'tipo_acao': 'updade',
+      'local': 'instancia',
+    });
+
+    await instancesRef.doc('samir_fenandes').set({
       'ativo': 1,
-      'cidade': 'Caratinga',
-      'cidade_id': 'caratinga',
-      'id': 'https://caratinga.versasaude.com.br',
-      'municipio_id': 'CODIGO', // substitua pelo código real, se disponível
-      'text': 'Caratinga',
-      'uf': 'MG',
+      'nome': 'Samir Fernandes',
+      'Sexo': 'masuclino',
+      'funcao': 'Desenvolvedor',
+      'cpf': 11931783632,
     });
-
-    // 2. Cria a subcoleção "settings" dentro do documento "caratinga".
-    final settingsRef = instancesRef.doc('caratinga').collection('settings');
-
-    // Cria o documento "feedback" na subcoleção "settings".
-    await settingsRef.doc('feedback').set({
-      'ativo': 0,
-      'periodo': 0,
-      'usar_local': 0,
-    });
-
-    // Cria o documento "gps" na subcoleção "settings".
-    await settingsRef.doc('gps').set({
-      'precision_GPS': 0,
-      'search_type_GPS': 0,
-    });
-
-    // Cria o documento "manutencao" (ou "manutençcao", conforme sua necessidade) na subcoleção "settings".
-    await settingsRef.doc('manutencao').set({
-      'controle': 1,
-      'logout_user_id_permission': [0],
-      'mdm': 0,
-      'senha': '0000',
-    });
-
-    // Cria o documento "pesquisa" na subcoleção "settings".
-    await settingsRef.doc('pesquisa').set({'covid': 0, 'usar_local': 0});
   }
 
   Future<void> atualizarConfiguracaoDocsSeparados() async {
@@ -153,53 +129,5 @@ class HomeVm extends _$HomeVm {
       // 'nov_07': 'Texto da novidade 7',
       // ...
     });
-  }
-
-  Future<List<Map<String, dynamic>>> listarInstancias() async {
-    // 1. Referência à coleção "instances"
-    final instancesRef = FirebaseFirestore.instance.collection('instances');
-
-    // 2. Busca todos os documentos de "instances"
-    final querySnapshot = await instancesRef.get();
-
-    // 3. Cria uma lista para armazenar as instâncias
-    final List<Map<String, dynamic>> listaInstancias = [];
-
-    final List<String> municipios = [];
-
-    // 4. Para cada documento da coleção "instances"
-    for (var doc in querySnapshot.docs) {
-      // Converte os campos do documento principal em Map
-      final data = doc.data();
-      final docId = doc.id;
-
-      // Pegando o nome do municio e salvando para ver na lista
-      municipios.add(data['text']);
-
-      // 5. Busca a subcoleção "settings"
-      final settingsSnapshot = await doc.reference.collection('settings').get();
-
-      // 6. Cria um Map para armazenar cada documento de "settings"
-      final Map<String, dynamic> settingsMap = {};
-
-      for (var subDoc in settingsSnapshot.docs) {
-        // A chave será o ID do subdocumento (por ex.: "feedback", "gps", etc.)
-        // e o valor será outro Map com os campos do subDoc
-        settingsMap[subDoc.id] = subDoc.data();
-      }
-
-      // 7. Monta um mapa final para representar a instância
-      final instanciaMap = {
-        'documentId': docId, // ID do documento principal
-        ...data, // espalha os campos do doc (cidade, ativo, etc.)
-        'settings': settingsMap, // insere o Map de settings
-      };
-
-      // 8. Adiciona à lista
-      listaInstancias.add(instanciaMap);
-    }
-
-    // 9. Retorna a lista contendo todas as instâncias com seus settings
-    return listaInstancias;
   }
 }
