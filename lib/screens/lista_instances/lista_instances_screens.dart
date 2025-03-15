@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/widgets/buttons/button/button.dart';
@@ -16,6 +17,8 @@ class ListaInstancesScreen extends ConsumerStatefulWidget {
 }
 
 class _ListaInstancesScreenState extends ConsumerState<ListaInstancesScreen> {
+  final formKey = GlobalKey<FormBuilderState>();
+
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic>? arguments =

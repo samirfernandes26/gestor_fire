@@ -1,6 +1,9 @@
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/helpers/messages.dart';
+import 'package:gestor_fire/core/ui/widgets/dialogs/cadastro_instance_dialog/cadastro_instance_dialog.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_state.dart';
 import 'package:gestor_fire/shared/model/instancia_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -61,6 +64,31 @@ class ListaInstancesVm extends _$ListaInstancesVm {
 
     // 9. Retorna a lista contendo todas as instâncias com seus settings
     return instancias;
+  }
+
+  Future<void> newInstance({
+    required BuildContext context,
+    required GlobalKey<FormBuilderState> formKey,
+  }) async {
+    await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => CadastroInstanceDialog(
+            formKey: formKey,
+            register: () async {
+              Map<String, dynamic> response = gerarMapaCidade(
+                nomeDaCidade: formKey.currentState?.value['municipio'],
+                uf: formKey.currentState?.value['estado'],
+              );
+
+              await adicionarInstancia(context: context, instancia: response);
+
+              if (context.mounted) {
+                context.navigator.pop(true);
+              }
+            },
+          ),
+    );
   }
 
   Future<void> adicionarInstancia({
