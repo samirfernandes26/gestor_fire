@@ -1,3 +1,4 @@
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:gestor_fire/core/ui/helpers/messages.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_state.dart';
@@ -62,7 +63,7 @@ class ListaInstancesVm extends _$ListaInstancesVm {
     return instancias;
   }
 
-  Future<void> adicionarCaratinga({
+  Future<void> adicionarInstancia({
     required Map<String, dynamic> instancia,
     required BuildContext context,
   }) async {
@@ -114,5 +115,42 @@ class ListaInstancesVm extends _$ListaInstancesVm {
         );
       }
     }
+  }
+
+  Map<String, dynamic> gerarMapaCidade({
+    required String nomeDaCidade,
+    required String uf,
+  }) {
+    // 1. Para os campos 'cidade' e 'text', cada palavra com a primeira letra maiúscula.
+    final List<String> palavras = nomeDaCidade.trim().split(RegExp(r'\s+'));
+    final String cidadeFormatada = palavras
+        .map((palavra) {
+          if (palavra.isEmpty) return palavra;
+          return palavra[0].toUpperCase() + palavra.substring(1).toLowerCase();
+        })
+        .join(' ');
+
+    // 2. Para 'cidade_id' e 'id': remover acentuação, deixar em minúsculo e ajustar separadores.
+    // Primeiro, converte para minúsculo e remove acentos.
+    final String nomeSemAcentos = removeDiacritics(
+      nomeDaCidade.toLowerCase().trim(),
+    );
+
+    // Para 'cidade_id', as palavras são separadas por underscore.
+    final String cidadeId = nomeSemAcentos.split(RegExp(r'\s+')).join('_');
+
+    // Para 'id', as palavras são unidas sem separador e montamos a URL.
+    final String idValue =
+        'https://${nomeSemAcentos.split(RegExp(r'\s+')).join('')}.versasaude.com.br';
+
+    return {
+      'ativo': 1,
+      'cidade': cidadeFormatada,
+      'cidade_id': cidadeId,
+      'id': idValue,
+      'municipio_id': 'CODIGO',
+      'text': cidadeFormatada,
+      'uf': uf,
+    };
   }
 }
