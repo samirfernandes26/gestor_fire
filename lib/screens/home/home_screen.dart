@@ -60,6 +60,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   onPressed: () async {
                     context.navigator.pushNamed(
                       RouteGeneratorKeys.listaInstances,
+                      arguments: {'reload': true},
                     );
                   },
                 ),

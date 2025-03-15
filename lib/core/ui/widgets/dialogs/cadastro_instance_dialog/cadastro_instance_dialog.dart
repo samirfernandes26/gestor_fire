@@ -55,14 +55,14 @@ class CadastroInstanceDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 FormBuilderTextField(
-                  name: 'Sigla do estado',
+                  name: 'estado',
                   onTapOutside: (_) => context.unfocus(),
-                  initialValue: '',
+                  initialValue: 'MG',
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
-                    label: Text('Informe o nome do muncipio'),
+                    label: Text('Sigla do estado'),
                   ),
                   maxLength: 2,
                 ),

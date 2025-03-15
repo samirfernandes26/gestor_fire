@@ -24,18 +24,36 @@ class _ListaInstancesScreenState extends ConsumerState<ListaInstancesScreen> {
     final Map<String, dynamic>? arguments =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-    final ListaInstancesVm(:loadData) = ref.read(
+    final ListaInstancesVm(:loadData, :newInstance) = ref.read(
       listaInstancesVmProvider.notifier,
     );
 
-    final ListaInstancesState(:instancias) = ref.watch(
+    final ListaInstancesState(:instancias, :status) = ref.watch(
       listaInstancesVmProvider,
     );
+
+    if (status == ListaInstancesStatus.intial || arguments?['reload'] == true) {
+      Future(() async {
+        arguments!['reload'] = false;
+        await loadData();
+      });
+    }
 
     return PopScope(
       canPop: false,
       child: Scaffold(
         appBar: AppBar(),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blueAccent,
+          onPressed: () async {
+            await newInstance(context: context, formKey: formKey);
+          },
+          child: const Icon(
+            Icons.add_circle_outline,
+            color: Colors.white,
+            size: 32,
+          ),
+        ),
         body: Visibility(
           visible: true,
           replacement: const AppLoader(color: Colors.white),
@@ -54,16 +72,6 @@ class _ListaInstancesScreenState extends ConsumerState<ListaInstancesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Button(
-                  textButton: 'LoadData',
-                  fontWeight: FontWeight.w700,
-                  colorText: Colors.white,
-                  colorButton: Colors.redAccent,
-                  onPressed: () async {
-                    loadData();
-                  },
-                ),
-
                 Expanded(
                   child: ListView.builder(
                     itemCount: instancias?.length ?? 0,

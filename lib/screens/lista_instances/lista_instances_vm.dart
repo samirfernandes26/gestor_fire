@@ -89,6 +89,8 @@ class ListaInstancesVm extends _$ListaInstancesVm {
             },
           ),
     );
+
+    await loadData();
   }
 
   Future<void> adicionarInstancia({
@@ -123,14 +125,14 @@ class ListaInstancesVm extends _$ListaInstancesVm {
         'controle': 1,
         'logout_user_id_permission': [0],
         'mdm': 0,
-        'senha': '0000',
+        'senha': 0,
       });
 
       // Cria o documento "pesquisa" na subcoleção "settings".
       await settingsRef.doc('pesquisa').set({'covid': 0, 'usar_local': 0});
 
       if (context.mounted) {
-        Messages.showErrors(
+        Messages.showSuccess(
           'Instancia de  ${instancia['text']} cadastrada com sucesso',
           context,
         );
