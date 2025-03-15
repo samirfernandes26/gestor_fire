@@ -39,8 +39,6 @@ class HomeVm extends _$HomeVm {
 
     await listarInstancias();
 
-    final teste = 1;
-
     // for (var doc in municipiosSnapshot.docs) {
     //   print(doc.data());
     // }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
-import 'package:gestor_fire/core/ui/widgets/buttons/button/button.dart';
 import 'package:gestor_fire/core/ui/widgets/collapse/collapsable_info_content/collapsable_info_content.dart';
 import 'package:gestor_fire/core/ui/widgets/loaders/app_loader/app_loader.dart';
 import 'package:gestor_fire/screens/visualizar_instance/visualizar_instance_state.dart';

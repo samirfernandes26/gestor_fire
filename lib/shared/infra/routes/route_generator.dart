@@ -50,17 +50,17 @@ class RouteGenerator {
     }
   }
 
-  static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(
-      builder: (context) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Página não encontrada'),
-            centerTitle: true,
-          ),
-          body: const Center(child: Text('Página não encontrada')),
-        );
-      },
-    );
-  }
+  // static Route<dynamic> _errorRoute() {
+  //   return MaterialPageRoute(
+  //     builder: (context) {
+  //       return Scaffold(
+  //         appBar: AppBar(
+  //           title: const Text('Página não encontrada'),
+  //           centerTitle: true,
+  //         ),
+  //         body: const Center(child: Text('Página não encontrada')),
+  //       );
+  //     },
+  //   );
+  // }
 }
