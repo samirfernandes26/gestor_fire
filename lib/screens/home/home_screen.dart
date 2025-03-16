@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/widgets/buttons/button/button.dart';
@@ -18,9 +19,21 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormBuilderState>();
+
+    final Map<String, dynamic>? arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
     final HomeVm(:loadData, :addUsuarios) = ref.read(homeVmProvider.notifier);
 
-    final HomeState(:users) = ref.watch(homeVmProvider);
+    final HomeState(:users, :status) = ref.watch(homeVmProvider);
+
+    if (status == HomeStatus.intial || arguments?['reload'] == true) {
+      Future(() async {
+        arguments?['reload'] = false;
+        await loadData();
+      });
+    }
 
     return PopScope(
       canPop: false,
@@ -29,7 +42,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           onPressed: () async {
-            // await newInstance(context: context, formKey: formKey);
+            await addUsuarios(context: context, formKey: formKey);
           },
           child: const Icon(
             Icons.person_add_outlined,
@@ -55,31 +68,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Ola Mundo'),
-                const SizedBox(height: 16),
-                Button(
-                  textButton: 'Teste Fire',
-                  fontWeight: FontWeight.w700,
-                  colorText: Colors.white,
-                  colorButton: Colors.blueAccent,
-                  onPressed: () async {
-                    loadData();
-                    // addUsuarios();
-                  },
-                ),
-                const SizedBox(height: 16),
-                Button(
-                  textButton: 'Teste',
-                  fontWeight: FontWeight.w700,
-                  colorText: Colors.white,
-                  colorButton: Colors.green,
-                  onPressed: () async {
-                    context.navigator.pushNamed(
-                      RouteGeneratorKeys.listaInstances,
-                      arguments: {'reload': true},
-                    );
-                  },
-                ),
                 const SizedBox(height: 16),
 
                 Expanded(
@@ -88,7 +76,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     itemBuilder:
                         (context, index) => Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                          child: TileUser(),
+                          child: TileUser(
+                            onTap:
+                                () => context.navigator.pushNamed(
+                                  RouteGeneratorKeys.listaInstances,
+                                  arguments: {
+                                    'reload': true,
+                                    'usuario': users![index],
+                                  },
+                                ),
+                          ),
                         ),
                   ),
                 ),

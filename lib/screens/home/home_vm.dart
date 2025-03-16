@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:gestor_fire/core/extensions/build_context_extention.dart';
+import 'package:gestor_fire/core/ui/widgets/dialogs/cadastro_usuario_dialog/cadastro_usuario_dialog.dart';
 import 'package:gestor_fire/screens/home/home_state.dart';
 import 'package:gestor_fire/shared/model/usuario_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,30 +17,51 @@ class HomeVm extends _$HomeVm {
   Future<void> loadData() async {
     List<UsuarioModel> users = await listarInstancias();
 
-    state = state.copyWith(users: users);
+    state = state.copyWith(users: users, status: HomeStatus.loaded);
   }
 
-  Future<void> addUsuarios() async {
+  Future<void> addUsuarios({
+    required BuildContext context,
+    required GlobalKey<FormBuilderState> formKey,
+  }) async {
+    await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => CadastroUsuarioDialog(
+            formKey: formKey,
+            register: () async {
+              Map<String, dynamic> response = {
+                'ativo': 1,
+                'nome': formKey.currentState?.value['nome'],
+                'sexo': formKey.currentState?.value['sexo'],
+                'cpf': formKey.currentState?.value['cpf'],
+                'funcao': formKey.currentState?.value['funcao'],
+              };
+
+              await newUser(userMap: response);
+
+              if (context.mounted) {
+                context.navigator.pop(true);
+              }
+            },
+          ),
+    );
+    await loadData();
+  }
+
+  Future<void> newUser({required Map<String, dynamic> userMap}) async {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
 
     final instancesRef = FirebaseFirestore.instance.collection('usuarios');
 
     final settingsRef = instancesRef.doc('samir_fenandes').collection('logs');
 
+    await instancesRef.doc('samir_fenandes').set(userMap);
+
     await settingsRef.doc(timestamp.toString()).set({
       'tipo_acao': 'updade',
       'local': 'instancia',
     });
-
-    await instancesRef.doc('samir_fenandes').set({
-      'ativo': 1,
-      'nome': 'Samir Fernandes',
-      'sexo': 'masuclino',
-      'funcao': 'Desenvolvedor',
-      'cpf': 11931783632,
-    });
-
-    await loadData();
   }
 
   Future<List<UsuarioModel>> listarInstancias() async {

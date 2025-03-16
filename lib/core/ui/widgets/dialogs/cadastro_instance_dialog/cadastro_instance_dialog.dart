@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/widgets/buttons/button/button.dart';
 
@@ -50,6 +51,11 @@ class CadastroInstanceDialog extends StatelessWidget {
                     ),
                     label: Text('Informe o nome do muncipio'),
                   ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Nome do municipio é obrigatório',
+                    ),
+                  ]),
                 ),
                 const SizedBox(height: 16),
                 FormBuilderTextField(
@@ -62,6 +68,11 @@ class CadastroInstanceDialog extends StatelessWidget {
                     ),
                     label: Text('Sigla do estado'),
                   ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Estado é obrigatório',
+                    ),
+                  ]),
                   maxLength: 2,
                 ),
                 const SizedBox(height: 16),

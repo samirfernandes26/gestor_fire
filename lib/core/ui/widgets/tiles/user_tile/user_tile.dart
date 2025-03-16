@@ -3,7 +3,9 @@ import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/constants/images_constants.dart';
 
 class TileUser extends StatelessWidget {
-  const TileUser({super.key});
+  const TileUser({super.key, required this.onTap});
+
+  final Future<void>? Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class TileUser extends StatelessWidget {
               children: [
                 ListTile(
                   contentPadding: const EdgeInsets.all(8),
-                  onTap: () {},
+                  onTap: onTap,
                   onLongPress: () {
                     final batta = 1;
                   },
