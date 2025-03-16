@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/widgets/buttons/button/button.dart';
 import 'package:gestor_fire/core/ui/widgets/loaders/app_loader/app_loader.dart';
+import 'package:gestor_fire/core/ui/widgets/tiles/user_tile/user_tile.dart';
+import 'package:gestor_fire/screens/home/home_state.dart';
 import 'package:gestor_fire/screens/home/home_vm.dart';
 import 'package:gestor_fire/shared/infra/routes/route_generator.dart';
 
@@ -16,12 +18,25 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final HomeVm(:testeFire, :addUsuarios) = ref.read(homeVmProvider.notifier);
+    final HomeVm(:loadData, :addUsuarios) = ref.read(homeVmProvider.notifier);
+
+    final HomeState(:users) = ref.watch(homeVmProvider);
 
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(title: const Text('Home')),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blueAccent,
+          onPressed: () async {
+            // await newInstance(context: context, formKey: formKey);
+          },
+          child: const Icon(
+            Icons.person_add_outlined,
+            color: Colors.white,
+            size: 32,
+          ),
+        ),
         body: Visibility(
           visible: true,
           replacement: const AppLoader(color: Colors.white),
@@ -43,13 +58,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Text('Ola Mundo'),
                 const SizedBox(height: 16),
                 Button(
-                  textButton: 'Teste',
+                  textButton: 'Teste Fire',
                   fontWeight: FontWeight.w700,
                   colorText: Colors.white,
                   colorButton: Colors.blueAccent,
                   onPressed: () async {
-                    // testeFire();
-                    addUsuarios();
+                    loadData();
+                    // addUsuarios();
                   },
                 ),
                 const SizedBox(height: 16),
@@ -64,6 +79,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       arguments: {'reload': true},
                     );
                   },
+                ),
+                const SizedBox(height: 16),
+
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: users?.length ?? 0,
+                    itemBuilder:
+                        (context, index) => Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                          child: TileUser(),
+                        ),
+                  ),
                 ),
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:gestor_fire/screens/home/home_state.dart';
+import 'package:gestor_fire/shared/model/usuario_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,50 +10,17 @@ class HomeVm extends _$HomeVm {
   @override
   HomeState build() => HomeState.initial();
 
-  Future<void> testeFire() async {
-    // final municipiosSnapshot =
-    //     await FirebaseFirestore.instance.collection('instances').get();
+  Future<void> loadData() async {
+    List<UsuarioModel> users = await listarInstancias();
 
-    // final docRef = FirebaseFirestore.instance
-    //     .collection('instances')
-    //     .doc('barra_longa');
-
-    // var docSnapshot = await docRef.get();
-
-    // if (docSnapshot.exists) {
-    //   final data = docSnapshot.data() as Map<String, dynamic>;
-    // }
-
-    // await atualizarNomeCidade('Barra Longa Batata');
-
-    // docSnapshot = await docRef.get();
-
-    // if (docSnapshot.exists) {
-    //   final data = docSnapshot.data() as Map<String, dynamic>;
-    // }
-
-    // await atualizarConfiguracaoDocsSeparados();
-
-    // await adicionarNovidadeVersao();
-
-    // for (var doc in municipiosSnapshot.docs) {
-    //   print(doc.data());
-    // }
-  }
-
-  Future<void> atualizarNomeCidade(String novoNome) async {
-    final docRef = FirebaseFirestore.instance
-        .collection('instances')
-        .doc('barra_longa');
-
-    await docRef.update({'cidade': novoNome});
+    state = state.copyWith(users: users);
   }
 
   Future<void> addUsuarios() async {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    // 1. Cria o documento "caratinga" na coleção "instances" com os campos básicos.
     final instancesRef = FirebaseFirestore.instance.collection('usuarios');
+
     final settingsRef = instancesRef.doc('samir_fenandes').collection('logs');
 
     await settingsRef.doc(timestamp.toString()).set({
@@ -63,10 +31,47 @@ class HomeVm extends _$HomeVm {
     await instancesRef.doc('samir_fenandes').set({
       'ativo': 1,
       'nome': 'Samir Fernandes',
-      'Sexo': 'masuclino',
+      'sexo': 'masuclino',
       'funcao': 'Desenvolvedor',
       'cpf': 11931783632,
     });
+
+    await loadData();
+  }
+
+  Future<List<UsuarioModel>> listarInstancias() async {
+    // 1. Referência à coleção "usuarios"
+    final instancesRef = FirebaseFirestore.instance.collection('usuarios');
+
+    // 2. Busca todos os documentos de "usuarios"
+    final querySnapshot = await instancesRef.get();
+
+    // 3. Cria uma lista para armazenar as usuarios
+    final List<UsuarioModel> usuarios = [];
+
+    // 4. Para cada documento da coleção "usuarios"
+    for (var doc in querySnapshot.docs) {
+      // Converte os campos do documento principal em Map
+      final data = doc.data();
+      final userId = doc.id;
+
+      // 7. Monta um mapa final para representar a usuarios
+      final instanciaMap = {'userId': userId, ...data};
+
+      // 8. Adiciona à lista
+      usuarios.add(UsuarioModel.fromJson(instanciaMap));
+    }
+
+    // 9. Retorna a lista contendo todos os usuarios
+    return usuarios;
+  }
+
+  Future<void> atualizarNomeCidade(String novoNome) async {
+    final docRef = FirebaseFirestore.instance
+        .collection('instances')
+        .doc('barra_longa');
+
+    await docRef.update({'cidade': novoNome});
   }
 
   Future<void> atualizarConfiguracaoDocsSeparados() async {
