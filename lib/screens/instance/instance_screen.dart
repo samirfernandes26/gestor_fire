@@ -32,12 +32,12 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
       instanceVmProvider,
     );
 
-    // if (status == InstanceStatus.intial || arguments?['reload'] == true) {
-    //   Future(() async {
-    //     arguments!['reload'] = false;
-    //     await loadData();
-    //   });
-    // }
+    if (status == InstanceStatus.intial || arguments?['reload'] == true) {
+      Future(() async {
+        arguments!['reload'] = false;
+        await loadData(arguments['instancia']);
+      });
+    }
 
     return PopScope(
       canPop: false,
