@@ -38,7 +38,6 @@ class CadastroInstanceDialog extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 16),
 
                 const SizedBox(height: 24),
                 FormBuilderTextField(

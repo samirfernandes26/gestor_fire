@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestor_fire/screens/home/home_screen.dart';
+import 'package:gestor_fire/screens/instance/instance_screen.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_screens.dart';
 import 'package:gestor_fire/screens/visualizar_instance/visualizar_instance_screen.dart';
 
@@ -9,6 +10,7 @@ sealed class RouteGeneratorKeys {
   static const home = '/home';
   static const listaInstances = '/listaInstances';
   static const visualizarInstance = '/visualizarInstance';
+  static const instanceScreen = '/instanceScreen';
 }
 
 class RouteGenerator {
@@ -28,6 +30,11 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => const VisualizarInstanceScreen(),
+        );
+      case RouteGeneratorKeys.instanceScreen:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const InstanceScreen(),
         );
 
       // case RouteGeneratorKeys.authLogin:

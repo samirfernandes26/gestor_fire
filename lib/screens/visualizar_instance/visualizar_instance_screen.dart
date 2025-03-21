@@ -5,6 +5,7 @@ import 'package:gestor_fire/core/ui/widgets/collapse/collapsable_info_content/co
 import 'package:gestor_fire/core/ui/widgets/loaders/app_loader/app_loader.dart';
 import 'package:gestor_fire/screens/visualizar_instance/visualizar_instance_state.dart';
 import 'package:gestor_fire/screens/visualizar_instance/visualizar_instance_vm.dart';
+import 'package:gestor_fire/shared/infra/routes/route_generator.dart';
 
 class VisualizarInstanceScreen extends ConsumerStatefulWidget {
   const VisualizarInstanceScreen({super.key});
@@ -41,6 +42,16 @@ class _VisualizarInstanceScreenState
       canPop: false,
       child: Scaffold(
         appBar: AppBar(),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blueAccent,
+          onPressed: () async {
+            context.navigator.pushNamed(
+              RouteGeneratorKeys.instanceScreen,
+              arguments: {'instancia': instancia, 'reload': true},
+            );
+          },
+          child: const Icon(Icons.edit_outlined, color: Colors.white, size: 32),
+        ),
         body: Visibility(
           visible: true,
           replacement: const AppLoader(color: Colors.white),
