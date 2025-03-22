@@ -39,9 +39,9 @@ class _VisualizarInstanceScreenState
     }
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(title: const Text('Vizuallizar Instancia')),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           onPressed: () async {

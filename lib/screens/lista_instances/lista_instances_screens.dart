@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/widgets/buttons/button/button.dart';
+import 'package:gestor_fire/core/ui/widgets/cards/instancia/instancia_card.dart';
 import 'package:gestor_fire/core/ui/widgets/loaders/app_loader/app_loader.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_state.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_vm.dart';
@@ -28,19 +29,19 @@ class _ListaInstancesScreenState extends ConsumerState<ListaInstancesScreen> {
       listaInstancesVmProvider.notifier,
     );
 
-    final ListaInstancesState(:instancias, :status) = ref.watch(
+    final ListaInstancesState(:instancias, :usuario, :status) = ref.watch(
       listaInstancesVmProvider,
     );
 
     if (status == ListaInstancesStatus.intial || arguments?['reload'] == true) {
+      arguments!['reload'] = false;
       Future(() async {
-        arguments!['reload'] = false;
-        await loadData();
+        await loadData(usuario: arguments['usuario']);
       });
     }
 
     return PopScope(
-      canPop: false,
+      canPop: instancias != null,
       child: Scaffold(
         appBar: AppBar(title: const Text('Instancias')),
         floatingActionButton: FloatingActionButton(
@@ -78,22 +79,28 @@ class _ListaInstancesScreenState extends ConsumerState<ListaInstancesScreen> {
                     itemBuilder:
                         (context, index) => Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                          child: Button(
-                            textButton:
-                                instancias?[index].text ?? 'Não informado',
-                            fontWeight: FontWeight.w700,
-                            colorText: Colors.white,
-                            colorButton: Colors.grey,
-                            onPressed: () async {
-                              context.navigator.pushNamed(
-                                RouteGeneratorKeys.visualizarInstance,
-                                arguments: {
-                                  'instancia': instancias?[index],
-                                  'reload': true,
-                                },
-                              );
-                            },
+                          child: InstanciaCard(
+                            enableSlide: true,
+                            instancia: instancias![index],
+                            usuario: usuario!,
                           ),
+
+                          // Button(
+                          //   textButton:
+                          //       instancias?[index].text ?? 'Não informado',
+                          //   fontWeight: FontWeight.w700,
+                          //   colorText: Colors.white,
+                          //   colorButton: Colors.grey,
+                          //   onPressed: () async {
+                          //     context.navigator.pushNamed(
+                          //       RouteGeneratorKeys.visualizarInstance,
+                          //       arguments: {
+                          //         'instancia': instancias?[index],
+                          //         'reload': true,
+                          //       },
+                          //     );
+                          //   },
+                          // ),
                         ),
                   ),
                 ),

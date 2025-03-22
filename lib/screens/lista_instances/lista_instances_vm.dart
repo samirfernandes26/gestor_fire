@@ -6,6 +6,7 @@ import 'package:gestor_fire/core/ui/helpers/messages.dart';
 import 'package:gestor_fire/core/ui/widgets/dialogs/cadastro_instance_dialog/cadastro_instance_dialog.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_state.dart';
 import 'package:gestor_fire/shared/model/instancia_model.dart';
+import 'package:gestor_fire/shared/model/usuario_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -16,53 +17,42 @@ class ListaInstancesVm extends _$ListaInstancesVm {
   @override
   ListaInstancesState build() => ListaInstancesState.initial();
 
-  Future<void> loadData() async {
+  Future<void> loadData({required UsuarioModel usuario}) async {
     List<InstanciaModel> instancias = await listarInstancias();
 
-    state = state.copyWith(instancias: instancias);
+    state = state.copyWith(
+      instancias: instancias,
+      usuario: usuario,
+      status: ListaInstancesStatus.loaded,
+    );
   }
 
   Future<List<InstanciaModel>> listarInstancias() async {
-    // 1. Referência à coleção "instances"
     final instancesRef = FirebaseFirestore.instance.collection('instances');
-
-    // 2. Busca todos os documentos de "instances"
     final querySnapshot = await instancesRef.get();
-
-    // 3. Cria uma lista para armazenar as instâncias
-
     final List<InstanciaModel> instancias = [];
 
-    // 4. Para cada documento da coleção "instances"
     for (var doc in querySnapshot.docs) {
-      // Converte os campos do documento principal em Map
-      final data = doc.data();
-      final docId = doc.id;
+      Map<String, dynamic> data = doc.data();
+      String docId = doc.id;
 
-      // 5. Busca a subcoleção "settings"
       final settingsSnapshot = await doc.reference.collection('settings').get();
 
-      // 6. Cria um Map para armazenar cada documento de "settings"
-      final Map<String, dynamic> settingsMap = {};
+      Map<String, dynamic> settingsMap = {};
 
       for (var subDoc in settingsSnapshot.docs) {
-        // A chave será o ID do subdocumento (por ex.: "feedback", "gps", etc.)
-        // e o valor será outro Map com os campos do subDoc
         settingsMap[subDoc.id] = subDoc.data();
       }
 
-      // 7. Monta um mapa final para representar a instância
-      final instanciaMap = {
-        'documentId': docId, // ID do documento principal
-        ...data, // espalha os campos do doc (cidade, ativo, etc.)
-        'settings': settingsMap, // insere o Map de settings
+      Map<String, dynamic> instanciaMap = {
+        'documentId': docId,
+        ...data,
+        'settings': settingsMap,
       };
 
-      // 8. Adiciona à lista
       instancias.add(InstanciaModel.fromJson(instanciaMap));
     }
 
-    // 9. Retorna a lista contendo todas as instâncias com seus settings
     return instancias;
   }
 
@@ -90,7 +80,7 @@ class ListaInstancesVm extends _$ListaInstancesVm {
           ),
     );
 
-    await loadData();
+    await loadData(usuario: state.usuario!);
   }
 
   Future<void> adicionarInstancia({
@@ -98,29 +88,33 @@ class ListaInstancesVm extends _$ListaInstancesVm {
     required BuildContext context,
   }) async {
     try {
-      // 1. Cria o documento "caratinga" na coleção "instances" com os campos básicos.
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+
       final instancesRef = FirebaseFirestore.instance.collection('instances');
+
       await instancesRef.doc(instancia['cidade_id']).set(instancia);
 
-      // 2. Cria a subcoleção "settings" dentro do documento "caratinga".
+      final usuarioRef = FirebaseFirestore.instance.collection('usuarios');
+
+      final usuarioLogRef = usuarioRef
+          .doc(state.usuario!.userId)
+          .collection('logs');
+
       final settingsRef = instancesRef
           .doc(instancia['cidade_id'])
           .collection('settings');
 
-      // Cria o documento "feedback" na subcoleção "settings".
       await settingsRef.doc('feedback').set({
         'ativo': 0,
         'periodo': 0,
         'usar_local': 0,
       });
 
-      // Cria o documento "gps" na subcoleção "settings".
       await settingsRef.doc('gps').set({
         'precision_GPS': 0,
         'search_type_GPS': 0,
       });
 
-      // Cria o documento "manutencao" (ou "manutençcao", conforme sua necessidade) na subcoleção "settings".
       await settingsRef.doc('manutencao').set({
         'controle': 1,
         'logout_user_id_permission': [0],
@@ -128,8 +122,13 @@ class ListaInstancesVm extends _$ListaInstancesVm {
         'senha': 0,
       });
 
-      // Cria o documento "pesquisa" na subcoleção "settings".
       await settingsRef.doc('pesquisa').set({'covid': 0, 'usar_local': 0});
+
+      await usuarioLogRef.doc(timestamp.toString()).set({
+        'tipo_acao': 'Cadastrou uma nova instancia, ${instancia['text']}',
+        'local': 'Lista de instancias',
+        'log_id': timestamp,
+      });
 
       if (context.mounted) {
         Messages.showSuccess(
@@ -151,7 +150,6 @@ class ListaInstancesVm extends _$ListaInstancesVm {
     required String nomeDaCidade,
     required String uf,
   }) {
-    // 1. Para os campos 'cidade' e 'text', cada palavra com a primeira letra maiúscula.
     final List<String> palavras = nomeDaCidade.trim().split(RegExp(r'\s+'));
     final String cidadeFormatada = palavras
         .map((palavra) {
@@ -160,16 +158,12 @@ class ListaInstancesVm extends _$ListaInstancesVm {
         })
         .join(' ');
 
-    // 2. Para 'cidade_id' e 'id': remover acentuação, deixar em minúsculo e ajustar separadores.
-    // Primeiro, converte para minúsculo e remove acentos.
     final String nomeSemAcentos = removeDiacritics(
       nomeDaCidade.toLowerCase().trim(),
     );
 
-    // Para 'cidade_id', as palavras são separadas por underscore.
     final String cidadeId = nomeSemAcentos.split(RegExp(r'\s+')).join('_');
 
-    // Para 'id', as palavras são unidas sem separador e montamos a URL.
     final String idValue =
         'https://${nomeSemAcentos.split(RegExp(r'\s+')).join('')}.versasaude.com.br';
 

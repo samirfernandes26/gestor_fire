@@ -39,7 +39,7 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
     }
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       child: Scaffold(
         appBar: AppBar(title: const Text('Instancias')),
         body: Visibility(
