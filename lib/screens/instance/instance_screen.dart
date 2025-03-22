@@ -85,7 +85,7 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
                             const SizedBox(height: 8),
                             Button(
                               textButton:
-                                  '${enabledForm == false ? 'Abilitar' : 'Desabilitar'} todos os campos',
+                                  '${enabledForm == false ? 'Habilitar' : 'Desabilitar'} todos os campos',
                               colorText: Colors.white,
                               colorButton: Colors.blueAccent,
                               fontWeight: FontWeight.w700,

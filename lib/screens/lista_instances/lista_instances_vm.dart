@@ -1,9 +1,11 @@
+import 'package:asyncstate/asyncstate.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/helpers/messages.dart';
 import 'package:gestor_fire/core/ui/widgets/dialogs/cadastro_instance_dialog/cadastro_instance_dialog.dart';
+import 'package:gestor_fire/core/ui/widgets/tiles/confirmacao/confirmacao_dialog.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_state.dart';
 import 'package:gestor_fire/shared/model/instancia_model.dart';
 import 'package:gestor_fire/shared/model/usuario_model.dart';
@@ -176,5 +178,58 @@ class ListaInstancesVm extends _$ListaInstancesVm {
       'text': cidadeFormatada,
       'uf': uf,
     };
+  }
+
+  Future<void> deleteInstance({
+    required BuildContext context,
+    required String cidadeId,
+  }) async {
+    try {
+      bool? result = await showDialog<bool>(
+        context: context,
+        builder:
+            (context) => ConfirmacaoDialog(
+              title: 'Deletar instância',
+              description: 'Deseja realmente deletar esta instância?',
+              onPressedConfirmation: () {
+                context.navigator.pop(true);
+              },
+              onPressedNegation: () {
+                context.navigator.pop(false);
+              },
+            ),
+      );
+
+      if (result == true) {
+        final instanceRef = FirebaseFirestore.instance
+            .collection('instances')
+            .doc(cidadeId);
+
+        final settingsSnapshot = await instanceRef.collection('settings').get();
+
+        WriteBatch batch = FirebaseFirestore.instance.batch();
+
+        for (final doc in settingsSnapshot.docs) {
+          batch.delete(doc.reference);
+        }
+
+        await batch.commit();
+
+        await instanceRef.delete();
+
+        await loadData(usuario: state.usuario!).asyncLoader();
+
+        if (context.mounted) {
+          Messages.showSuccess('Instancia deletada com sucesso', context);
+        }
+      }
+      if (result == false && context.mounted) {
+        Messages.showSuccess('Ação abortada com sucesso', context);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Messages.showSuccess('Ouve um erro ao deletar instancia: $e', context);
+      }
+    }
   }
 }

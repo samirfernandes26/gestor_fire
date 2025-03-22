@@ -21,7 +21,7 @@ class InstanciaCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ListaInstancesVm(:loadData) = ref.read(
+    final ListaInstancesVm(:deleteInstance) = ref.read(
       listaInstancesVmProvider.notifier,
     );
 
@@ -33,7 +33,7 @@ class InstanciaCard extends ConsumerWidget {
         children: [
           SlidableAction(
             onPressed: (context) async {
-              //TODO: Implementar a deleção
+              deleteInstance(context: context, cidadeId: instancia.cidadeId);
             },
             backgroundColor: Colors.blue.shade100,
             foregroundColor: Colors.redAccent.shade700,
