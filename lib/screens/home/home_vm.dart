@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/widgets/dialogs/cadastro_usuario_dialog/cadastro_usuario_dialog.dart';
@@ -34,7 +35,7 @@ class HomeVm extends _$HomeVm {
                 'ativo': 1,
                 'nome': formKey.currentState?.value['nome'],
                 'sexo': formKey.currentState?.value['sexo'],
-                'cpf': formKey.currentState?.value['cpf'],
+                'cpf': int.parse(formKey.currentState?.value['cpf']),
                 'funcao': formKey.currentState?.value['funcao'],
               };
 
@@ -52,11 +53,15 @@ class HomeVm extends _$HomeVm {
   Future<void> newUser({required Map<String, dynamic> userMap}) async {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
 
+    final nomeId = (removeDiacritics(
+      userMap['nome'].toLowerCase().trim(),
+    )).split(RegExp(r'\s+')).join('_');
+
     final instancesRef = FirebaseFirestore.instance.collection('usuarios');
 
-    final settingsRef = instancesRef.doc('samir_fenandes').collection('logs');
+    final settingsRef = instancesRef.doc(nomeId).collection('logs');
 
-    await instancesRef.doc('samir_fenandes').set(userMap);
+    await instancesRef.doc(nomeId).set(userMap);
 
     await settingsRef.doc(timestamp.toString()).set({
       'tipo_acao': 'updade',
