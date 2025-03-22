@@ -24,9 +24,7 @@ class TileUser extends StatelessWidget {
                 ListTile(
                   contentPadding: const EdgeInsets.all(8),
                   onTap: onTap,
-                  onLongPress: () {
-                    final batta = 1;
-                  },
+                  onLongPress: () {},
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -71,7 +71,7 @@ Widget checkSingle(
         Text(
           '$label ${isRequired == true ? '*' : ''}',
           style: const TextStyle(
-            color: Colors.blueAccent,
+            // color: Colors.blueAccent,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),
@@ -83,7 +83,7 @@ Widget checkSingle(
           name: name,
           enabled: enabled,
           decoration: const InputDecoration(
-            // fillColor: Colors.transparent,
+            fillColor: Colors.transparent,
             border: InputBorder.none,
             contentPadding: EdgeInsets.zero,
           ),

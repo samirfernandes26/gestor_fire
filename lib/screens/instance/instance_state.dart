@@ -11,7 +11,7 @@ class InstanceState {
   });
 
   InstanceState.initial()
-    : this(status: InstanceStatus.intial, message: null, enabledForm: false);
+    : this(status: InstanceStatus.intial, message: null, enabledForm: true);
 
   InstanceStatus status;
   String? message;
