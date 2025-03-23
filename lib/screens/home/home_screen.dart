@@ -23,7 +23,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final Map<String, dynamic>? arguments =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-    final HomeVm(:loadData, :addUsuarios) = ref.read(homeVmProvider.notifier);
+    final HomeVm(:loadData, :addUsuarios, :liberarUsuario) = ref.read(
+      homeVmProvider.notifier,
+    );
 
     final HomeState(:users, :status) = ref.watch(homeVmProvider);
 
@@ -76,13 +78,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         (context, index) => Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                           child: TileUser(
+                            user: users![index],
                             onTap:
-                                () => context.navigator.pushNamed(
-                                  RouteGeneratorKeys.listaInstances,
-                                  arguments: {
-                                    'reload': true,
-                                    'usuario': users![index],
-                                  },
+                                () async => await liberarUsuario(
+                                  context: context,
+                                  formKey: formKey,
+                                  user: users[index],
                                 ),
                           ),
                         ),

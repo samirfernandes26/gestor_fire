@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/core/ui/constants/images_constants.dart';
+import 'package:gestor_fire/shared/model/usuario_model.dart';
 
 class TileUser extends StatelessWidget {
-  const TileUser({super.key, required this.onTap});
+  const TileUser({super.key, required this.onTap, required this.user});
 
   final Future<void>? Function() onTap;
+  final UsuarioModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +32,17 @@ class TileUser extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Image.asset(
-                            ImagesConstants.avatarFeminino,
-                            semanticLabel: 'Avatar Feminino',
-                            width: 64,
-                          ),
+                          user.sexo == 'faminino'
+                              ? Image.asset(
+                                ImagesConstants.avatarFeminino,
+                                semanticLabel: 'Avatar Feminino',
+                                width: 64,
+                              )
+                              : Image.asset(
+                                ImagesConstants.avatarMasculino,
+                                semanticLabel: 'Avatar Masculino',
+                                width: 64,
+                              ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Column(
@@ -43,21 +51,23 @@ class TileUser extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      'Nome: ',
-                                      style: context.theme.textTheme.bodyLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      'Nome:',
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
+                                    const SizedBox(width: 8),
                                     Text(
-                                      'Samir Fernandes de Lima Resende',
+                                      user.nome,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: context.theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 16,
-                                          ),
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                     ),
                                     const SizedBox(width: 16),
                                   ],
@@ -66,21 +76,23 @@ class TileUser extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      'Valor R\$:',
-                                      style: context.theme.textTheme.bodyLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      'Função:',
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
+                                    const SizedBox(width: 8),
                                     Text(
-                                      'data.total',
+                                      user.funcao,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: context.theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 16,
-                                          ),
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -90,14 +102,6 @@ class TileUser extends StatelessWidget {
                         ],
                       ),
                     ],
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.blueAccent,
-                      size: 32,
-                    ),
-                    onPressed: () {},
                   ),
                 ),
               ],

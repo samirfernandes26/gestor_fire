@@ -223,6 +223,7 @@ class ListaInstancesVm extends _$ListaInstancesVm {
           Messages.showSuccess('Instancia deletada com sucesso', context);
         }
       }
+
       if (result == false && context.mounted) {
         Messages.showSuccess('Ação abortada com sucesso', context);
       }

@@ -1,13 +1,12 @@
+import 'package:asyncstate/asyncstate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
-import 'package:gestor_fire/core/ui/widgets/buttons/button/button.dart';
 import 'package:gestor_fire/core/ui/widgets/cards/instancia/instancia_card.dart';
 import 'package:gestor_fire/core/ui/widgets/loaders/app_loader/app_loader.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_state.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_vm.dart';
-import 'package:gestor_fire/shared/infra/routes/route_generator.dart';
 
 class ListaInstancesScreen extends ConsumerStatefulWidget {
   const ListaInstancesScreen({super.key});
@@ -33,10 +32,10 @@ class _ListaInstancesScreenState extends ConsumerState<ListaInstancesScreen> {
       listaInstancesVmProvider,
     );
 
-    if (status == ListaInstancesStatus.intial || arguments?['reload'] == true) {
+    if (status == ListaInstancesStatus.intial && arguments?['reload'] == true) {
       arguments!['reload'] = false;
       Future(() async {
-        await loadData(usuario: arguments['usuario']);
+        await loadData(usuario: arguments['usuario']).asyncLoader();
       });
     }
 
@@ -84,23 +83,6 @@ class _ListaInstancesScreenState extends ConsumerState<ListaInstancesScreen> {
                             instancia: instancias![index],
                             usuario: usuario!,
                           ),
-
-                          // Button(
-                          //   textButton:
-                          //       instancias?[index].text ?? 'Não informado',
-                          //   fontWeight: FontWeight.w700,
-                          //   colorText: Colors.white,
-                          //   colorButton: Colors.grey,
-                          //   onPressed: () async {
-                          //     context.navigator.pushNamed(
-                          //       RouteGeneratorKeys.visualizarInstance,
-                          //       arguments: {
-                          //         'instancia': instancias?[index],
-                          //         'reload': true,
-                          //       },
-                          //     );
-                          //   },
-                          // ),
                         ),
                   ),
                 ),
