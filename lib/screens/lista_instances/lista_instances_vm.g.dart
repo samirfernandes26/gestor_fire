@@ -6,7 +6,7 @@ part of 'lista_instances_vm.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$listaInstancesVmHash() => r'3e16ca6f26ef3cf9532467c9e89b0e72f80b178b';
+String _$listaInstancesVmHash() => r'9cc0fb9b0ea5b987213a81b5ac3ad819919005e3';
 
 /// See also [ListaInstancesVm].
 @ProviderFor(ListaInstancesVm)

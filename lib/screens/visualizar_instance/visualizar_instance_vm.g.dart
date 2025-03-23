@@ -7,7 +7,7 @@ part of 'visualizar_instance_vm.dart';
 // **************************************************************************
 
 String _$visualizarInstanceVmHash() =>
-    r'9e9eded505d32c79f7b926fbc91b1718b50d88be';
+    r'84b275acfdb552062abb4d37c90c7aa0bd95dc5a';
 
 /// See also [VisualizarInstanceVm].
 @ProviderFor(VisualizarInstanceVm)

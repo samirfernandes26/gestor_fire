@@ -182,7 +182,7 @@ class ListaInstancesVm extends _$ListaInstancesVm {
 
   Future<void> deleteInstance({
     required BuildContext context,
-    required String cidadeId,
+    required InstanciaModel instancia,
   }) async {
     try {
       bool? result = await showDialog<bool>(
@@ -201,9 +201,17 @@ class ListaInstancesVm extends _$ListaInstancesVm {
       );
 
       if (result == true) {
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+
         final instanceRef = FirebaseFirestore.instance
             .collection('instances')
-            .doc(cidadeId);
+            .doc(instancia.cidadeId);
+
+        final usuarioRef = FirebaseFirestore.instance.collection('usuarios');
+
+        final usuarioLogRef = usuarioRef
+            .doc(state.usuario!.userId)
+            .collection('logs');
 
         final settingsSnapshot = await instanceRef.collection('settings').get();
 
@@ -222,6 +230,12 @@ class ListaInstancesVm extends _$ListaInstancesVm {
         if (context.mounted) {
           Messages.showSuccess('Instancia deletada com sucesso', context);
         }
+
+        await usuarioLogRef.doc(timestamp.toString()).set({
+          'tipo_acao': 'Deletou a instancia de ${instancia.text}',
+          'local': 'Lista de instancias',
+          'log_id': timestamp,
+        });
       }
 
       if (result == false && context.mounted) {

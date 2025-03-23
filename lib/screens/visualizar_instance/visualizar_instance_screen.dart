@@ -26,7 +26,7 @@ class _VisualizarInstanceScreenState
       visualizarInstanceVmProvider.notifier,
     );
 
-    final VisualizarInstanceState(:instancia, :status) = ref.watch(
+    final VisualizarInstanceState(:instancia, :status, :usuario) = ref.watch(
       visualizarInstanceVmProvider,
     );
 
@@ -34,7 +34,7 @@ class _VisualizarInstanceScreenState
         arguments?['reload'] == true) {
       Future(() async {
         arguments!['reload'] = false;
-        await loadData(arguments['instancia']);
+        await loadData(arguments['instancia'], arguments['usuario']);
       });
     }
 
@@ -47,7 +47,11 @@ class _VisualizarInstanceScreenState
           onPressed: () async {
             context.navigator.pushNamed(
               RouteGeneratorKeys.instanceScreen,
-              arguments: {'instancia': instancia, 'reload': true},
+              arguments: {
+                'instancia': instancia,
+                'reload': true,
+                'usuario': usuario,
+              },
             );
           },
           child: const Icon(Icons.edit_outlined, color: Colors.white, size: 32),

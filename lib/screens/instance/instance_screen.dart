@@ -34,7 +34,7 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
     if (status == InstanceStatus.intial || arguments?['reload'] == true) {
       Future(() async {
         arguments!['reload'] = false;
-        await loadData(arguments['instancia']);
+        await loadData(arguments['instancia'], arguments['usuario']);
       });
     }
 
@@ -73,6 +73,7 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
                               label: 'Informe o ticket',
                               name: 'senha',
                               isRequired: true,
+                              keyboardType: TextInputType.number,
                               initialValue:
                                   instancia.settings.manutencao.senha
                                       .toString(),
@@ -507,7 +508,7 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
                   onPressed: () async {
                     switch (formKey.currentState?.saveAndValidate()) {
                       case true:
-                        salvar(formKey.currentState?.value);
+                        salvar(formKey.currentState?.value, context);
                         break;
                       case false || null:
                         break;
