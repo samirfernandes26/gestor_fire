@@ -57,7 +57,15 @@ class InstanceVm extends _$InstanceVm {
         .doc(state.usuario!.userId)
         .collection('logs');
 
-    Map<String, dynamic> instanciaMap = montarObjeto(instanciaForm: form);
+    InstanciaModel instances = state.instancia!;
+
+    instances.settings.manutencao.senha =
+        form['senha'] != null ? int.parse(form['senha']) : 0000;
+
+    Map<String, dynamic> instanciaMap = montarObjeto(
+      instanciaForm: form,
+      instance: instances,
+    );
 
     final instancesRef = FirebaseFirestore.instance.collection('instances');
 
@@ -84,7 +92,8 @@ class InstanceVm extends _$InstanceVm {
         .update(instanciaMap['settings']['pesquisa']);
 
     await usuarioLogRef.doc(timestamp.toString()).set({
-      'tipo_acao': 'Atualizou a instancia ${instanciaMap['instancia']['text']}',
+      'tipo_acao':
+          'Liberou a manutenção a partir da demanda VSOP-${instances.settings.manutencao.senha}',
       'local': 'Atualização da instancia',
       'log_id': timestamp,
     });
@@ -100,30 +109,31 @@ class InstanceVm extends _$InstanceVm {
 
   Map<String, dynamic> montarObjeto({
     required Map<String, dynamic> instanciaForm,
+    required InstanciaModel instance,
   }) => {
     'instancia': {
-      'ativo': instanciaForm['ativo'] ? 1 : 0,
-      'cidade': instanciaForm['cidade'],
-      'cidade_id': instanciaForm['cidade_id'],
-      'id': instanciaForm['id'],
-      'municipio_id': instanciaForm['municipio_id'],
-      'text': instanciaForm['text'],
-      'uf': instanciaForm['uf'],
+      'ativo': instance.ativo,
+      'cidade': instance.cidade,
+      'cidade_id': instance.cidadeId,
+      'id': instance.id,
+      'municipio_id': instance.municipioId,
+      'text': instance.text,
+      'uf': instance.uf,
     },
     'settings': {
       'feedback': {
-        'ativo': instanciaForm['feedback_ativo'] ? 1 : 0,
-        'periodo': int.parse(instanciaForm['feedback_periodo']),
-        'usar_local': instanciaForm['feedback_usar_local'] ? 1 : 0,
+        'ativo': instance.settings.feedback.ativo,
+        'periodo': instance.settings.feedback.periodo,
+        'usar_local': instance.settings.feedback.usarLocal,
       },
       'gps': {
-        'precision_GPS': instanciaForm['precision_GPS'] ? 1 : 0,
-        'search_type_GPS': instanciaForm['search_type_GPS'] ? 1 : 0,
+        'precision_GPS': instance.settings.gps.precisionGps,
+        'search_type_GPS': instance.settings.gps.searchTypeGps,
       },
-      'manutencao': {'senha': int.parse(instanciaForm['senha'])},
+      'manutencao': {'senha': instance.settings.manutencao.senha},
       'pesquisa': {
-        'covid': instanciaForm['covid'] ? 1 : 0,
-        'usar_local': instanciaForm['pesquisa_usar_local'] ? 1 : 0,
+        'covid': instance.settings.pesquisa.covid,
+        'usar_local': instance.settings.pesquisa.usarLocal,
       },
     },
   };

@@ -16,6 +16,7 @@ class InstanciaModel {
     required this.uf,
   });
 
+  @JsonKey(name: 'settings', toJson: _settingsToJson)
   SettingsModel settings;
 
   int ativo;
@@ -48,4 +49,6 @@ class InstanciaModel {
       _$InstanciaModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$InstanciaModelToJson(this);
+
+  static _settingsToJson(SettingsModel? instituicao) => instituicao?.toJson();
 }

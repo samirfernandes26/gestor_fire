@@ -22,7 +22,7 @@ InstanciaModel _$InstanciaModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$InstanciaModelToJson(InstanciaModel instance) =>
     <String, dynamic>{
-      'settings': instance.settings,
+      'settings': InstanciaModel._settingsToJson(instance.settings),
       'ativo': instance.ativo,
       'cidade': instance.cidade,
       'cidade_id': instance.cidadeId,

@@ -6,7 +6,7 @@ part of 'instance_vm.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$instanceVmHash() => r'942107a6e4b5ee8b0d1f9ee3c3938c3087afca4f';
+String _$instanceVmHash() => r'fed442a4c0894ef0deba410c533796715c2a0360';
 
 /// See also [InstanceVm].
 @ProviderFor(InstanceVm)

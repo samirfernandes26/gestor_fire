@@ -19,8 +19,8 @@ SettingsModel _$SettingsModelFromJson(
 
 Map<String, dynamic> _$SettingsModelToJson(SettingsModel instance) =>
     <String, dynamic>{
-      'feedback': instance.feedback,
-      'gps': instance.gps,
-      'manutencao': instance.manutencao,
-      'pesquisa': instance.pesquisa,
+      'feedback': SettingsModel._feedbackToJson(instance.feedback),
+      'gps': SettingsModel._gpsToJson(instance.gps),
+      'manutencao': SettingsModel._manutencaoToJson(instance.manutencao),
+      'pesquisa': SettingsModel._pesquisaToJson(instance.pesquisa),
     };
