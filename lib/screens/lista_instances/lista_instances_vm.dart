@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:asyncstate/asyncstate.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
@@ -20,42 +22,54 @@ class ListaInstancesVm extends _$ListaInstancesVm {
   ListaInstancesState build() => ListaInstancesState.initial();
 
   Future<void> loadData({required UsuarioModel usuario}) async {
-    List<InstanciaModel> instancias = await listarInstancias();
+    try {
+      List<InstanciaModel> instancias = await listarInstancias();
 
-    state = state.copyWith(
-      instancias: instancias,
-      usuario: usuario,
-      status: ListaInstancesStatus.loaded,
-    );
+      state = state.copyWith(
+        instancias: instancias,
+        usuario: usuario,
+        status: ListaInstancesStatus.loaded,
+      );
+    } catch (e) {
+      state = state.copyWith(status: ListaInstancesStatus.error);
+      rethrow;
+    }
   }
 
   Future<List<InstanciaModel>> listarInstancias() async {
-    final instancesRef = FirebaseFirestore.instance.collection('instances');
-    final querySnapshot = await instancesRef.get();
-    final List<InstanciaModel> instancias = [];
+    try {
+      final instancesRef = FirebaseFirestore.instance.collection('instances');
+      final querySnapshot = await instancesRef.get();
+      final List<InstanciaModel> instancias = [];
 
-    for (var doc in querySnapshot.docs) {
-      Map<String, dynamic> data = doc.data();
-      String docId = doc.id;
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data();
+        String docId = doc.id;
+        log('Instancia ID: $docId, Data: $data');
 
-      final settingsSnapshot = await doc.reference.collection('settings').get();
+        final settingsSnapshot =
+            await doc.reference.collection('settings').get();
 
-      Map<String, dynamic> settingsMap = {};
+        Map<String, dynamic> settingsMap = {};
 
-      for (var subDoc in settingsSnapshot.docs) {
-        settingsMap[subDoc.id] = subDoc.data();
+        for (var subDoc in settingsSnapshot.docs) {
+          settingsMap[subDoc.id] = subDoc.data();
+        }
+
+        Map<String, dynamic> instanciaMap = {
+          'documentId': docId,
+          ...data,
+          'settings': settingsMap,
+        };
+
+        instancias.add(InstanciaModel.fromJson(instanciaMap));
       }
 
-      Map<String, dynamic> instanciaMap = {
-        'documentId': docId,
-        ...data,
-        'settings': settingsMap,
-      };
-
-      instancias.add(InstanciaModel.fromJson(instanciaMap));
+      return instancias;
+    } catch (e) {
+      state = state.copyWith(status: ListaInstancesStatus.error);
+      rethrow;
     }
-
-    return instancias;
   }
 
   Future<void> newInstance({

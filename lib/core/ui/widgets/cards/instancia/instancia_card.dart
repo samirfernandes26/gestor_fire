@@ -33,7 +33,7 @@ class InstanciaCard extends ConsumerWidget {
         children: [
           SlidableAction(
             onPressed: (context) async {
-              deleteInstance(context: context, instancia: instancia);
+              // deleteInstance(context: context, instancia: instancia);
             },
             backgroundColor: Colors.blue.shade100,
             foregroundColor: Colors.redAccent.shade700,

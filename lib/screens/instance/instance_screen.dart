@@ -71,7 +71,7 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
                             if (instancia != null)
                               textField(
                                 context,
-                                label: 'Informe o ticket',
+                                label: 'Informe o numero da demanda',
                                 name: 'senha',
                                 isRequired: true,
                                 keyboardType: TextInputType.number,
