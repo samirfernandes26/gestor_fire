@@ -72,7 +72,7 @@ sealed class AppTheme {
     scaffoldBackgroundColor: Colors.blueAccent,
     inputDecorationTheme: _defaulInputDecorationTheme,
     elevatedButtonTheme: _elevatedButtonThemeData,
-    cardTheme: const CardTheme(color: Colors.white),
+    cardTheme: const CardThemeData(color: Colors.white),
     bottomSheetTheme: BottomSheetThemeData(
       dragHandleColor: Colors.grey.shade500,
       backgroundColor: Colors.white,
@@ -111,7 +111,7 @@ sealed class AppTheme {
       suffixIconColor: Colors.grey.shade400,
     ),
     elevatedButtonTheme: _elevatedButtonThemeData,
-    cardTheme: CardTheme(color: Colors.grey.shade800),
+    cardTheme: CardThemeData(color: Colors.grey.shade800),
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: Colors.grey.shade800,
       dragHandleColor: Colors.grey.shade500,

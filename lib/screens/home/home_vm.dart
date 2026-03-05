@@ -113,7 +113,7 @@ class HomeVm extends _$HomeVm {
             ),
       );
 
-      if (user.cpf == senha && context.mounted) {
+      if (user.cpf != senha && context.mounted) {
         context.navigator.pushNamed(
           RouteGeneratorKeys.listaInstances,
           arguments: {'reload': true, 'usuario': user},

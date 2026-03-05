@@ -21,9 +21,7 @@ class InstanciaCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ListaInstancesVm(:deleteInstance) = ref.read(
-      listaInstancesVmProvider.notifier,
-    );
+    final ListaInstancesVm() = ref.read(listaInstancesVmProvider.notifier);
 
     return Slidable(
       enabled: enableSlide,
@@ -70,7 +68,7 @@ class InstanciaCard extends ConsumerWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              '${instancia.text.toUpperCase()} - ${instancia.uf.toUpperCase()}',
+                              instancia.nome.toUpperCase(),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: context.theme.textTheme.titleLarge
@@ -85,7 +83,7 @@ class InstanciaCard extends ConsumerWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            instancia.id,
+                            instancia.url.toString(),
                             overflow: TextOverflow.ellipsis,
                             style: context.theme.textTheme.titleSmall?.copyWith(
                               color:

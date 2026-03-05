@@ -1,13 +1,12 @@
 import 'dart:developer';
 
-import 'package:asyncstate/asyncstate.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
+import 'package:gestor_fire/core/helper/data/localidade.dart';
 import 'package:gestor_fire/core/ui/helpers/messages.dart';
 import 'package:gestor_fire/core/ui/widgets/dialogs/cadastro_instance_dialog/cadastro_instance_dialog.dart';
-import 'package:gestor_fire/core/ui/widgets/tiles/confirmacao/confirmacao_dialog.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_state.dart';
 import 'package:gestor_fire/shared/model/instancia_model.dart';
 import 'package:gestor_fire/shared/model/usuario_model.dart';
@@ -38,29 +37,17 @@ class ListaInstancesVm extends _$ListaInstancesVm {
 
   Future<List<InstanciaModel>> listarInstancias() async {
     try {
-      final instancesRef = FirebaseFirestore.instance.collection('instances');
+      final instancesRef = FirebaseFirestore.instance.collection('municipios');
       final querySnapshot = await instancesRef.get();
       final List<InstanciaModel> instancias = [];
 
       for (var doc in querySnapshot.docs) {
         Map<String, dynamic> data = doc.data();
         String docId = doc.id;
+
         log('Instancia ID: $docId, Data: $data');
 
-        final settingsSnapshot =
-            await doc.reference.collection('settings').get();
-
-        Map<String, dynamic> settingsMap = {};
-
-        for (var subDoc in settingsSnapshot.docs) {
-          settingsMap[subDoc.id] = subDoc.data();
-        }
-
-        Map<String, dynamic> instanciaMap = {
-          'documentId': docId,
-          ...data,
-          'settings': settingsMap,
-        };
+        Map<String, dynamic> instanciaMap = {'document_id': docId, ...data};
 
         instancias.add(InstanciaModel.fromJson(instanciaMap));
       }
@@ -83,8 +70,7 @@ class ListaInstancesVm extends _$ListaInstancesVm {
             formKey: formKey,
             register: () async {
               Map<String, dynamic> response = gerarMapaCidade(
-                nomeDaCidade: formKey.currentState?.value['municipio'],
-                uf: formKey.currentState?.value['estado'],
+                localidadeId: formKey.currentState?.value['localidade_id'],
               );
 
               await adicionarInstancia(context: context, instancia: response);
@@ -107,8 +93,10 @@ class ListaInstancesVm extends _$ListaInstancesVm {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
 
       final instancesRef = FirebaseFirestore.instance.collection('instances');
+      final instanceDocRef = instancesRef.doc();
+      final instanciaPayload = {...instancia};
 
-      await instancesRef.doc(instancia['cidade_id']).set(instancia);
+      await instanceDocRef.set(instancia);
 
       final usuarioRef = FirebaseFirestore.instance.collection('usuarios');
 
@@ -116,39 +104,15 @@ class ListaInstancesVm extends _$ListaInstancesVm {
           .doc(state.usuario!.userId)
           .collection('logs');
 
-      final settingsRef = instancesRef
-          .doc(instancia['cidade_id'])
-          .collection('settings');
-
-      await settingsRef.doc('feedback').set({
-        'ativo': 0,
-        'periodo': 0,
-        'usar_local': 0,
-      });
-
-      await settingsRef.doc('gps').set({
-        'precision_GPS': 0,
-        'search_type_GPS': 0,
-      });
-
-      await settingsRef.doc('manutencao').set({
-        'controle': 1,
-        'logout_user_id_permission': [0],
-        'mdm': 0,
-        'senha': 0,
-      });
-
-      await settingsRef.doc('pesquisa').set({'covid': 0, 'usar_local': 0});
-
       await usuarioLogRef.doc(timestamp.toString()).set({
-        'tipo_acao': 'Cadastrou uma nova instancia, ${instancia['text']}',
+        'tipo_acao': 'Cadastrou uma nova instancia, ${instancia['nome']}',
         'local': 'Lista de instancias',
         'log_id': timestamp,
       });
 
       if (context.mounted) {
         Messages.showSuccess(
-          'Instancia de  ${instancia['text']} cadastrada com sucesso',
+          'Instancia de ${instancia['nome']} cadastrada com sucesso',
           context,
         );
       }
@@ -162,103 +126,46 @@ class ListaInstancesVm extends _$ListaInstancesVm {
     }
   }
 
-  Map<String, dynamic> gerarMapaCidade({
-    required String nomeDaCidade,
-    required String uf,
-  }) {
+  Map<String, dynamic> _buscarLocalidadePorId({required int localidadeId}) {
+    for (final localidade in localidadeData) {
+      if (localidade['id'] == localidadeId) {
+        return Map<String, dynamic>.from(localidade);
+      }
+    }
+
+    throw StateError('Localidade id $localidadeId não encontrada');
+  }
+
+  Map<String, dynamic> gerarMapaCidade({required int localidadeId}) {
+    final localidade = _buscarLocalidadePorId(localidadeId: localidadeId);
+    final String nomeDaCidade = localidade['localidade'] as String? ?? '';
+
     final List<String> palavras = nomeDaCidade.trim().split(RegExp(r'\s+'));
-    final String cidadeFormatada = palavras
+    String cidadeFormatada = palavras
         .map((palavra) {
           if (palavra.isEmpty) return palavra;
           return palavra[0].toUpperCase() + palavra.substring(1).toLowerCase();
         })
         .join(' ');
 
+    // TODO adicionanar correção do estado aqui
+    cidadeFormatada = '$cidadeFormatada - MG';
+
     final String nomeSemAcentos = removeDiacritics(
       nomeDaCidade.toLowerCase().trim(),
     );
-
-    final String cidadeId = nomeSemAcentos.split(RegExp(r'\s+')).join('_');
 
     final String idValue =
         'https://${nomeSemAcentos.split(RegExp(r'\s+')).join('')}.versasaude.com.br';
 
     return {
-      'ativo': 1,
-      'cidade': cidadeFormatada,
-      'cidade_id': cidadeId,
-      'id': idValue,
-      'municipio_id': 'CODIGO',
-      'text': cidadeFormatada,
-      'uf': uf,
+      'ativo': false,
+      'ace': false,
+      'acs': false,
+      'motorista': false,
+      'nome': cidadeFormatada,
+      'url': idValue,
+      'localidade_id': localidadeId,
     };
-  }
-
-  Future<void> deleteInstance({
-    required BuildContext context,
-    required InstanciaModel instancia,
-  }) async {
-    try {
-      bool? result = await showDialog<bool>(
-        context: context,
-        builder:
-            (context) => ConfirmacaoDialog(
-              title: 'Deletar instância',
-              description: 'Deseja realmente deletar esta instância?',
-              onPressedConfirmation: () {
-                context.navigator.pop(true);
-              },
-              onPressedNegation: () {
-                context.navigator.pop(false);
-              },
-            ),
-      );
-
-      if (result == true) {
-        final timestamp = DateTime.now().millisecondsSinceEpoch;
-
-        final instanceRef = FirebaseFirestore.instance
-            .collection('instances')
-            .doc(instancia.cidadeId);
-
-        final usuarioRef = FirebaseFirestore.instance.collection('usuarios');
-
-        final usuarioLogRef = usuarioRef
-            .doc(state.usuario!.userId)
-            .collection('logs');
-
-        final settingsSnapshot = await instanceRef.collection('settings').get();
-
-        WriteBatch batch = FirebaseFirestore.instance.batch();
-
-        for (final doc in settingsSnapshot.docs) {
-          batch.delete(doc.reference);
-        }
-
-        await batch.commit();
-
-        await instanceRef.delete();
-
-        await loadData(usuario: state.usuario!).asyncLoader();
-
-        if (context.mounted) {
-          Messages.showSuccess('Instancia deletada com sucesso', context);
-        }
-
-        await usuarioLogRef.doc(timestamp.toString()).set({
-          'tipo_acao': 'Deletou a instancia de ${instancia.text}',
-          'local': 'Lista de instancias',
-          'log_id': timestamp,
-        });
-      }
-
-      if (result == false && context.mounted) {
-        Messages.showSuccess('Ação abortada com sucesso', context);
-      }
-    } catch (e) {
-      if (context.mounted) {
-        Messages.showSuccess('Ouve um erro ao deletar instancia: $e', context);
-      }
-    }
   }
 }

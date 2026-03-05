@@ -32,7 +32,7 @@ class TileUser extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          user.sexo == 'faminino'
+                          user.sexo == 'feminino'
                               ? Image.asset(
                                 ImagesConstants.avatarFeminino,
                                 semanticLabel: 'Avatar Feminino',

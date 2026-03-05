@@ -68,17 +68,72 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (instancia != null)
-                              textField(
-                                context,
-                                label: 'Informe o numero da demanda',
-                                name: 'senha',
-                                isRequired: true,
-                                keyboardType: TextInputType.number,
-                                initialValue:
-                                    instancia.settings.manutencao.senha
-                                        .toString(),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                instancia?.nome.toUpperCase() ??
+                                    'Nova Instância',
+                                textAlign: TextAlign.center,
+                                style: context.theme.textTheme.bodySmall
+                                    ?.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueAccent,
+                                    ),
                               ),
+                            ),
+                            SizedBox(height: 16),
+                            Visibility(
+                              visible: instancia != null,
+                              replacement: const SizedBox.shrink(),
+                              child: Column(
+                                children: [
+                                  switchField(
+                                    context,
+                                    name: 'ativo',
+                                    label: 'Ativo',
+                                    initialValue: instancia!.ativo,
+                                    enabled: true,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: switchField(
+                                          context,
+                                          name: 'ace',
+                                          label: 'ACE',
+                                          initialValue: instancia.ace,
+                                          enabled: true,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: switchField(
+                                          context,
+                                          name: 'acs',
+                                          label: 'ACS',
+                                          initialValue: instancia.acs,
+                                          enabled: true,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: switchField(
+                                          context,
+                                          name: 'motorista',
+                                          label: 'Motorista',
+                                          initialValue: instancia.motorista,
+                                          enabled: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+
                             const SizedBox(height: 16),
                             const Text(
                               'Termo de Responsabilidade',

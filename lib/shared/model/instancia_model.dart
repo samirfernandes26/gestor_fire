@@ -1,4 +1,3 @@
-import 'package:gestor_fire/shared/model/settings_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'instancia_model.g.dart';
@@ -6,49 +5,47 @@ part 'instancia_model.g.dart';
 @JsonSerializable()
 class InstanciaModel {
   InstanciaModel({
-    required this.settings,
     required this.ativo,
-    required this.cidade,
-    required this.cidadeId,
-    required this.id,
-    required this.municipioId,
-    required this.text,
-    required this.uf,
+    required this.ace,
+    required this.acs,
+    required this.motorista,
+    required this.nome,
+    required this.url,
+    required this.localidadeId,
+    required this.documentoId,
   });
 
-  @JsonKey(name: 'settings', toJson: _settingsToJson)
-  SettingsModel settings;
+  @JsonKey(name: 'document_id')
+  String documentoId;
 
-  int ativo;
+  bool ativo;
 
-  String cidade;
+  bool ace;
 
-  @JsonKey(name: 'cidade_id')
-  String cidadeId;
+  bool acs;
 
-  String id;
+  bool motorista;
 
-  @JsonKey(name: 'municipio_id')
-  String municipioId;
+  String nome;
 
-  String text;
+  String url;
 
-  String uf;
+  @JsonKey(name: 'localidade_id')
+  int localidadeId;
 
   InstanciaModel copyWithFromJson(Map<String, dynamic> json) =>
       this
-        ..ativo = json['ativo'] as int
-        ..cidade = json['cidade'] as String
-        ..cidadeId = json['cidade_id'] as String
-        ..id = json['id'] as String
-        ..municipioId = json['municipio_id'] as String
-        ..text = json['text'] as String
-        ..uf = json['uf'] as String;
+        ..ativo = json['ativo'] as bool
+        ..ace = json['ace'] as bool
+        ..acs = json['acs'] as bool
+        ..motorista = json['motorista'] as bool
+        ..nome = json['nome'] as String
+        ..url = json['url'] as String
+        ..localidadeId = json['localidade_id'] as int
+        ..documentoId = json['document_id'] as String;
 
   factory InstanciaModel.fromJson(Map<String, dynamic> json) =>
       _$InstanciaModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$InstanciaModelToJson(this);
-
-  static _settingsToJson(SettingsModel? instituicao) => instituicao?.toJson();
 }

@@ -42,7 +42,7 @@ class InstanceVm extends _$InstanceVm {
 
     await usuarioLogRef.doc(timestamp.toString()).set({
       'tipo_acao':
-          '${state.enabledForm! ? 'Habilitou' : 'Desabilitou'} edição de instância de ${state.instancia!.text}',
+          '${state.enabledForm! ? 'Habilitou' : 'Desabilitou'} edição de instância de ${state.instancia!.nome}',
       'local': 'Atualização da instancia',
       'log_id': timestamp,
     });
@@ -59,51 +59,35 @@ class InstanceVm extends _$InstanceVm {
 
     InstanciaModel instances = state.instancia!;
 
-    instances.settings.manutencao.senha =
-        form['senha'] != null ? int.parse(form['senha']) : 0000;
-
     Map<String, dynamic> instanciaMap = montarObjeto(
       instanciaForm: form,
       instance: instances,
     );
 
-    final instancesRef = FirebaseFirestore.instance.collection('instances');
+    final instancesRef = FirebaseFirestore.instance.collection('municipios');
 
     await instancesRef
-        .doc(instanciaMap['instancia']['cidade_id'])
-        .update(instanciaMap['instancia']);
-
-    final settingsRef = instancesRef
-        .doc(instanciaMap['instancia']['cidade_id'])
-        .collection('settings');
-
-    await settingsRef
-        .doc('feedback')
-        .update(instanciaMap['settings']['feedback']);
-
-    await settingsRef.doc('gps').update(instanciaMap['settings']['gps']);
-
-    await settingsRef
-        .doc('manutencao')
-        .update(instanciaMap['settings']['manutencao']);
-
-    await settingsRef
-        .doc('pesquisa')
-        .update(instanciaMap['settings']['pesquisa']);
+        .doc(instances.documentoId)
+        .update(instanciaMap['municipios']);
 
     await usuarioLogRef.doc(timestamp.toString()).set({
       'tipo_acao':
-          'Liberou a manutenção a partir da demanda VSOP-${instances.settings.manutencao.senha}',
+          'Editou a instância de ${state.instancia!.nome} - ${state.instancia!.url}',
       'local': 'Atualização da instancia',
       'log_id': timestamp,
     });
 
+    instances.ativo = instanciaMap['municipios']['ativo'] as bool;
+    instances.ace = instanciaMap['municipios']['ace'] as bool;
+    instances.acs = instanciaMap['municipios']['acs'] as bool;
+    instances.motorista = instanciaMap['municipios']['motorista'] as bool;
+
     if (context.mounted) {
-      context.navigator.pushNamedAndRemoveUntil(
-        RouteGeneratorKeys.listaInstances,
-        arguments: {'reload': true},
-        (route) => false,
-      );
+      context.navigator.pop({
+        'reload': true,
+        'instancia': instances,
+        'usuario': state.usuario,
+      });
     }
   }
 
@@ -111,30 +95,14 @@ class InstanceVm extends _$InstanceVm {
     required Map<String, dynamic> instanciaForm,
     required InstanciaModel instance,
   }) => {
-    'instancia': {
-      'ativo': instance.ativo,
-      'cidade': instance.cidade,
-      'cidade_id': instance.cidadeId,
-      'id': instance.id,
-      'municipio_id': instance.municipioId,
-      'text': instance.text,
-      'uf': instance.uf,
-    },
-    'settings': {
-      'feedback': {
-        'ativo': instance.settings.feedback.ativo,
-        'periodo': instance.settings.feedback.periodo,
-        'usar_local': instance.settings.feedback.usarLocal,
-      },
-      'gps': {
-        'precision_GPS': instance.settings.gps.precisionGps,
-        'search_type_GPS': instance.settings.gps.searchTypeGps,
-      },
-      'manutencao': {'senha': instance.settings.manutencao.senha},
-      'pesquisa': {
-        'covid': instance.settings.pesquisa.covid,
-        'usar_local': instance.settings.pesquisa.usarLocal,
-      },
+    'municipios': {
+      'ativo': instanciaForm['ativo'],
+      'ace': instanciaForm['ace'],
+      'acs': instanciaForm['acs'],
+      'motorista': instanciaForm['motorista'],
+      'nome': instance.nome,
+      'url': instance.url,
+      'localidade_id': instance.localidadeId,
     },
   };
 }

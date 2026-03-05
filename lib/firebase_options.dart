@@ -35,22 +35,12 @@ class DefaultFirebaseOptions {
     }
   }
 
-  // Teste
-  // static const FirebaseOptions android = FirebaseOptions(
-  //   apiKey: 'AIzaSyB0p5JdfhycEn7T5elGyt-AAes1hrg6x6Y',
-  //   appId: '1:358228309121:android:d55e36655bf01f482b0980',
-  //   messagingSenderId: '358228309121',
-  //   projectId: 'painelteste-aa1d8',
-  //   storageBucket: 'painelteste-aa1d8.firebasestorage.app',
-  // );
-
-  // Production
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyClCvYSw-0kdS1_y7jtUsgIX488C-6sYk4',
-    appId: '1:998573309167:android:fa89495231d4847ded6f1a',
-    messagingSenderId: '998573309167',
-    projectId: 'versasus-7170a',
-    storageBucket: 'versasus-7170a.appspot.com',
+    apiKey: 'AIzaSyAZGHSRRR0YKzpicectuy9QLaggDpzmIxQ',
+    appId: '1:74773279738:android:28e58193aaf85d59ed6a43',
+    messagingSenderId: '74773279738',
+    projectId: 'versasaude-acs',
+    storageBucket: 'versasaude-acs.firebasestorage.app',
   );
 }
 

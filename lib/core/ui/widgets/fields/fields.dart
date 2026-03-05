@@ -96,6 +96,119 @@ Widget checkSingle(
   );
 }
 
+Widget switchField(
+  BuildContext context, {
+  required String name,
+  required String label,
+  bool? isRequired,
+  String? Function(bool?)? validator,
+  bool enabled = true,
+  void Function(bool?)? onChanged,
+  bool initialValue = false,
+  Widget? title,
+  Widget? secondary,
+  Color? activeColor,
+  Color? activeTrackColor,
+}) {
+  return FormBuilderField<bool>(
+    name: name,
+    enabled: enabled,
+    initialValue: initialValue,
+    validator: validator,
+    builder: (field) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$label ${isRequired == true ? '*' : ''}',
+              style: const TextStyle(
+                color: Colors.blueAccent,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Switch(
+                  value: field.value ?? false,
+                  onChanged:
+                      enabled
+                          ? (value) {
+                            field.didChange(value);
+                            onChanged?.call(value);
+                          }
+                          : null,
+                  activeColor: activeColor ?? Colors.green,
+                  activeTrackColor: activeTrackColor ?? Colors.green.shade800,
+                ),
+              ],
+            ),
+            if (secondary != null) secondary,
+            if (field.errorText != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  field.errorText!,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+Widget selectField<T>(
+  BuildContext context, {
+  required String name,
+  required String label,
+  bool? isRequired,
+  Widget? secondary,
+  String? Function(T?)? validator,
+  required List<InputOption<T>> options,
+  T? initialValue,
+  void Function(T?)? onChanged,
+  bool enabled = true,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$label ${isRequired == true ? '*' : ''}',
+          style: const TextStyle(
+            color: Colors.blueAccent,
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
+        ),
+        FormBuilderDropdown<T>(
+          enabled: enabled,
+          name: name,
+          decoration: InputDecoration(hintText: label),
+          initialValue: initialValue,
+          items: [
+            DropdownMenuItem<T>(value: null, child: const Text('Selecione')),
+            ...options.map(
+              (option) => DropdownMenuItem<T>(
+                value: option.value,
+                child: Text(option.description),
+              ),
+            ),
+          ],
+          onChanged: onChanged,
+          validator: validator,
+        ),
+      ],
+    ),
+  );
+}
+
 Widget textField<T>(
   BuildContext context, {
   required String name,

@@ -6,7 +6,6 @@ import 'package:gestor_fire/core/ui/widgets/loaders/app_loader/app_loader.dart';
 import 'package:gestor_fire/core/ui/widgets/tiles/user_tile/user_tile.dart';
 import 'package:gestor_fire/screens/home/home_state.dart';
 import 'package:gestor_fire/screens/home/home_vm.dart';
-import 'package:gestor_fire/shared/infra/routes/route_generator.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

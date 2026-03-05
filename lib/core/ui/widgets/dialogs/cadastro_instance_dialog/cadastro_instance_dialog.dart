@@ -1,9 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:diacritic/diacritic.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
+import 'package:gestor_fire/core/helper/data/estados_do_brasil.dart';
+import 'package:gestor_fire/core/helper/data/localidade.dart';
 import 'package:gestor_fire/core/ui/widgets/buttons/button/button.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+
+final Map<String, int> _ufIdBySigla = {
+  for (var i = 0; i < estadosDoBrasilData.length; i++)
+    estadosDoBrasilData[i].value: i + 1,
+};
+
+Map<String, dynamic>? _findLocalidadeByTexto({
+  required String? texto,
+  required String? estadoSigla,
+}) {
+  if (texto == null || texto.trim().isEmpty) {
+    return null;
+  }
+
+  final normalized = removeDiacritics(texto.toLowerCase().trim());
+  final ufId = _ufIdBySigla[estadoSigla];
+
+  for (final item in localidadeData) {
+    final localidadeFiltro = item['localidade_filtro'] as String? ?? '';
+    final itemUfId = item['uf_id'] as int?;
+
+    final matchesUf = ufId == null || itemUfId == ufId;
+    final matchesLocalidade = localidadeFiltro == normalized;
+
+    if (matchesUf && matchesLocalidade) {
+      return item;
+    }
+  }
+
+  return null;
+}
 
 class CadastroInstanceDialog extends StatelessWidget {
   const CadastroInstanceDialog({
@@ -40,40 +74,86 @@ class CadastroInstanceDialog extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 24),
-                FormBuilderTextField(
-                  name: 'municipio',
-                  onTapOutside: (_) => context.unfocus(),
-                  initialValue: '',
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                    ),
-                    label: Text('Informe o nome do muncipio'),
-                  ),
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(
-                      errorText: 'Nome do municipio é obrigatório',
-                    ),
-                  ]),
+
+                Autocomplete<String>(
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    final termo = removeDiacritics(
+                      textEditingValue.text.toLowerCase().trim(),
+                    );
+
+                    if (termo.isEmpty) {
+                      return const Iterable<String>.empty();
+                    }
+
+                    final estadoSelecionado =
+                        formKey.currentState?.fields['estado']?.value
+                            as String?;
+                    final ufId = _ufIdBySigla[estadoSelecionado];
+
+                    return localidadeData
+                        .where((localidade) {
+                          final localidadeFiltro =
+                              localidade['localidade_filtro'] as String? ?? '';
+                          final itemUfId = localidade['uf_id'] as int?;
+                          final matchesUf = ufId == null || itemUfId == ufId;
+
+                          return matchesUf && localidadeFiltro.contains(termo);
+                        })
+                        .map((localidade) => localidade['localidade'] as String)
+                        .toSet()
+                        .take(30);
+                  },
+                  fieldViewBuilder:
+                      (
+                        context,
+                        textEditingController,
+                        focusNode,
+                        onFieldSubmitted,
+                      ) => FormBuilderTextField(
+                        controller: textEditingController,
+                        focusNode: focusNode,
+                        name: 'localidade_id',
+                        onTapOutside: (_) => context.unfocus(),
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                          ),
+                          label: Text('Localidade'),
+                        ),
+                        valueTransformer: (value) {
+                          final estadoSelecionado =
+                              formKey.currentState?.fields['estado']?.value
+                                  as String?;
+                          final localidade = _findLocalidadeByTexto(
+                            texto: value,
+                            estadoSigla: estadoSelecionado,
+                          );
+
+                          return localidade?['id'];
+                        },
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                            errorText: 'Localidade é obrigatória',
+                          ),
+                          (value) {
+                            final estadoSelecionado =
+                                formKey.currentState?.fields['estado']?.value
+                                    as String?;
+                            final localidade = _findLocalidadeByTexto(
+                              texto: value,
+                              estadoSigla: estadoSelecionado,
+                            );
+
+                            if (localidade == null) {
+                              return 'Selecione uma localidade válida da lista';
+                            }
+
+                            return null;
+                          },
+                        ]),
+                      ),
                 ),
-                const SizedBox(height: 16),
-                FormBuilderTextField(
-                  name: 'estado',
-                  onTapOutside: (_) => context.unfocus(),
-                  initialValue: 'MG',
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                    ),
-                    label: Text('Sigla do estado'),
-                  ),
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(
-                      errorText: 'Estado é obrigatório',
-                    ),
-                  ]),
-                  maxLength: 2,
-                ),
+
                 const SizedBox(height: 16),
                 Button(
                   textButton: 'Cadastrar',

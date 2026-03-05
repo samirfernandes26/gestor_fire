@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
-import 'package:gestor_fire/core/ui/widgets/collapse/collapsable_info_content/collapsable_info_content.dart';
 import 'package:gestor_fire/core/ui/widgets/loaders/app_loader/app_loader.dart';
 import 'package:gestor_fire/screens/visualizar_instance/visualizar_instance_state.dart';
 import 'package:gestor_fire/screens/visualizar_instance/visualizar_instance_vm.dart';
@@ -45,7 +44,7 @@ class _VisualizarInstanceScreenState
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
           onPressed: () async {
-            context.navigator.pushNamed(
+            final result = await context.navigator.pushNamed(
               RouteGeneratorKeys.instanceScreen,
               arguments: {
                 'instancia': instancia,
@@ -53,6 +52,13 @@ class _VisualizarInstanceScreenState
                 'usuario': usuario,
               },
             );
+
+            if (result is Map<String, dynamic> &&
+                result['instancia'] != null &&
+                result['usuario'] != null &&
+                context.mounted) {
+              await loadData(result['instancia'], result['usuario']);
+            }
           },
           child: const Icon(Icons.edit_outlined, color: Colors.white, size: 32),
         ),
@@ -75,182 +81,90 @@ class _VisualizarInstanceScreenState
               thickness: 5,
               child: ListView(
                 children: [
-                  CollapsableInfoContent(
-                    title: 'Dados Da Instancia',
-                    content: [
-                      _rowInfo(
-                        context,
-                        icon: Icons.badge,
-                        label: 'Nome Instacia Exibido',
-                        description: instancia?.text,
-                        color: Colors.blue,
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      instancia?.nome.toUpperCase() ?? 'Nova Instância',
+                      textAlign: TextAlign.center,
+                      style: context.theme.textTheme.bodySmall?.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
                       ),
-                    ],
-                    contentCollapsed: [
-                      _rowInfo(
-                        context,
-                        icon: Icons.person,
-                        label: 'Instancia Ativa',
-                        description: instancia?.ativo == 1 ? 'Sim' : 'Não',
-                        color: Colors.blue,
-                      ),
-                      _rowInfo(
-                        context,
-                        icon: Icons.person,
-                        label: 'Cidade',
-                        description: instancia?.cidade,
-                        color: Colors.blue,
-                      ),
-                      _rowInfo(
-                        context,
-                        icon: Icons.label,
-                        label: 'Cidade Id',
-                        description: instancia?.cidadeId,
-                        color: Colors.blue,
-                      ),
-                      _rowInfo(
-                        context,
-                        icon: Icons.cake,
-                        label: 'Url Instancia',
-                        description: instancia?.id,
-                        color: Colors.blue,
-                      ),
-                      _rowInfo(
-                        context,
-                        icon: Icons.badge,
-                        label: 'Municipio Id',
-                        description: instancia?.municipioId,
-                        color: Colors.blue,
-                      ),
-
-                      // const Divider(),
-                    ],
+                    ),
                   ),
 
-                  CollapsableInfoContent(
-                    title: 'Dados de configuração da instancia',
-                    content: [
-                      _rowInfo(
-                        context,
-                        icon: Icons.badge,
-                        label: 'Senha / Ticket de manutenção',
-                        description:
-                            instancia?.settings.manutencao.senha.toString(),
-                        color: Colors.blue,
-                      ),
-                      _rowInfo(
-                        context,
-                        icon: Icons.badge,
-                        label: 'Usa mdm',
-                        description:
-                            instancia?.settings.manutencao.mdm == 1
-                                ? 'Sim'
-                                : 'Não',
-                        color: Colors.blue,
-                      ),
-                    ],
-                    contentCollapsed: [
-                      const Divider(),
-                      _rowInfo(
-                        context,
-                        icon: Icons.person,
-                        label: 'Feedback ativo',
-                        description:
-                            instancia?.settings.feedback.ativo == 1
-                                ? 'Sim'
-                                : 'Não',
-                        color: Colors.blue,
-                      ),
-                      _rowInfo(
-                        context,
-                        icon: Icons.person,
-                        label: 'Periodo vigente Feedback em Dias',
-                        description:
-                            '${instancia?.settings.feedback.periodo ?? 0} Dias',
-                        color: Colors.blue,
-                      ),
-                      _rowInfo(
-                        context,
-                        icon: Icons.label,
-                        label: 'Usar Configuração local de Feedback',
-                        description:
-                            instancia?.settings.feedback.usarLocal == 1
-                                ? 'Ativado'
-                                : 'Desativado',
-                        color: Colors.blue,
-                      ),
-                      const Divider(),
-                      _rowInfo(
-                        context,
-                        icon: Icons.cake,
-                        label: 'Precisão do GPS',
-                        description:
-                            instancia?.settings.gps.precisionGps == 1
-                                ? 'Ativado'
-                                : 'Desativado',
-                        color: Colors.blue,
-                      ),
-
-                      _rowInfo(
-                        context,
-                        icon: Icons.cake,
-                        label: 'Tipo de Pesquisa GPS',
-                        description:
-                            instancia?.settings.gps.searchTypeGps == 1
-                                ? 'Ativado'
-                                : 'Desativado',
-                        color: Colors.blue,
-                      ),
-                      const Divider(),
-                      _rowInfo(
-                        context,
-                        icon: Icons.cake,
-                        label:
-                            'Usuarios id com permissão de Logout com producão',
-                        description: instancia
-                            ?.settings
-                            .manutencao
-                            .logoutUserIdPermission
-                            .join(','),
-                        color: Colors.blue,
-                      ),
-
-                      _rowInfo(
-                        context,
-                        icon: Icons.cake,
-                        label: 'Controle de manutenção',
-                        description:
-                            instancia?.settings.manutencao.controle == 1
-                                ? 'Ativado'
-                                : 'Desativado',
-                        color: Colors.blue,
-                      ),
-
-                      const Divider(),
-
-                      _rowInfo(
-                        context,
-                        icon: Icons.cake,
-                        label: 'Pesquisa Covid',
-                        description:
-                            instancia?.settings.pesquisa.covid == 1
-                                ? 'Ativado'
-                                : 'Desativado',
-                        color: Colors.blue,
-                      ),
-
-                      _rowInfo(
-                        context,
-                        icon: Icons.cake,
-                        label: 'Usar configuração local de pesquisa',
-                        description:
-                            instancia?.settings.pesquisa.usarLocal == 1
-                                ? 'Não'
-                                : 'Sim',
-                        color: Colors.blue,
-                      ),
-                    ],
+                  SizedBox(height: 16),
+                  _rowInfo(
+                    context,
+                    icon: Icons.badge,
+                    label: 'Nome Instacia Exibido',
+                    description: instancia?.nome.toUpperCase(),
+                    color: Colors.blue,
                   ),
+                  SizedBox(height: 16),
+                  _rowInfo(
+                    context,
+                    icon: Icons.person,
+                    label: 'Localidade ID',
+                    description: instancia?.localidadeId.toString(),
+                    color: Colors.blue,
+                  ),
+
+                  SizedBox(height: 16),
+                  _rowInfo(
+                    context,
+                    icon: Icons.phone,
+                    label: 'Instancia Ativa',
+                    description: instancia?.ativo == true ? 'Sim' : 'Não',
+                    color: Colors.blue,
+                  ),
+
+                  SizedBox(height: 16),
+                  _rowInfo(
+                    context,
+                    icon: Icons.health_and_safety,
+                    label: 'Versa Saude ACS',
+                    description:
+                        instancia?.acs == true
+                            ? 'Em Funcionamento'
+                            : 'Desativado',
+                    color: Colors.blue,
+                  ),
+
+                  SizedBox(height: 16),
+                  _rowInfo(
+                    context,
+                    icon: Icons.pest_control,
+                    label: 'Versa Saude ACE',
+                    description:
+                        instancia?.ace == true
+                            ? 'Em Funcionamento'
+                            : 'Desativado',
+                    color: Colors.blue,
+                  ),
+
+                  SizedBox(height: 16),
+                  _rowInfo(
+                    context,
+                    icon: Icons.directions_car,
+                    label: 'Versa Saude Motorista',
+                    description:
+                        instancia?.motorista == true
+                            ? 'Em Funcionamento'
+                            : 'Desativado',
+                    color: Colors.blue,
+                  ),
+
+                  SizedBox(height: 16),
+                  _rowInfo(
+                    context,
+                    icon: Icons.link,
+                    label: 'URL de Acesso',
+                    description: instancia?.url,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(height: 16),
                 ],
               ),
             ),

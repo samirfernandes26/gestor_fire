@@ -6,7 +6,7 @@ part of 'home_vm.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$homeVmHash() => r'38c2679a28383676f99080ed6684de33e8c78253';
+String _$homeVmHash() => r'ba5a765c9f785e2b87043070c9b3c9e18e2a752b';
 
 /// See also [HomeVm].
 @ProviderFor(HomeVm)
