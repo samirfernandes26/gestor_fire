@@ -23,11 +23,11 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
     final Map<String, dynamic>? arguments =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-    final InstanceVm(:loadData, :editForm, :salvar) = ref.read(
+    final InstanceVm(:loadData, :salvar) = ref.read(
       instanceVmProvider.notifier,
     );
 
-    final InstanceState(:status, :instancia, :enabledForm) = ref.watch(
+    final InstanceState(:status, :instancia) = ref.watch(
       instanceVmProvider,
     );
 
@@ -79,20 +79,49 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blueAccent,
-                                    ),
+                                  ),
                               ),
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Visibility(
                               visible: instancia != null,
                               replacement: const SizedBox.shrink(),
                               child: Column(
                                 children: [
+                                  textField(
+                                    context,
+                                    name: 'nome',
+                                    label: 'Nome',
+                                    initialValue: instancia!.nome,
+                                    isRequired: true,
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
+                                        return 'Nome é obrigatório';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  textField(
+                                    context,
+                                    name: 'url',
+                                    label: 'URL',
+                                    initialValue: instancia.url,
+                                    keyboardType: TextInputType.url,
+                                    isRequired: true,
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
+                                        return 'URL é obrigatória';
+                                      }
+                                      return null;
+                                    },
+                                  ),
                                   switchField(
                                     context,
                                     name: 'ativo',
                                     label: 'Ativo',
-                                    initialValue: instancia!.ativo,
+                                    initialValue: instancia.ativo,
                                     enabled: true,
                                   ),
                                   Row(
@@ -181,7 +210,6 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
                               'Este sistema registra logs de todas as operações realizadas, incluindo o responsável por cada ação. '
                               'Em caso de uso indevido, medidas administrativas poderão ser aplicadas.',
                             ),
-                            if (instancia == null) const Text('Carregando...'),
                             const Spacer(),
                           ],
                         ),

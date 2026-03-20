@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
 import 'package:gestor_fire/screens/instance/instance_state.dart';
-import 'package:gestor_fire/shared/infra/routes/route_generator.dart';
 import 'package:gestor_fire/shared/model/instancia_model.dart';
 import 'package:gestor_fire/shared/model/usuario_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -48,7 +47,9 @@ class InstanceVm extends _$InstanceVm {
     });
   }
 
-  Future<void> salvar(form, BuildContext context) async {
+  Future<void> salvar(Map<String, dynamic>? form, BuildContext context) async {
+    if (form == null) return;
+
     final timestamp = DateTime.now().millisecondsSinceEpoch;
 
     final usuarioRef = FirebaseFirestore.instance.collection('usuarios');
@@ -72,7 +73,7 @@ class InstanceVm extends _$InstanceVm {
 
     await usuarioLogRef.doc(timestamp.toString()).set({
       'tipo_acao':
-          'Editou a instância de ${state.instancia!.nome} - ${state.instancia!.url}',
+          'Editou a instância de ${instanciaMap['municipios']['nome']} - ${instanciaMap['municipios']['url']}',
       'local': 'Atualização da instancia',
       'log_id': timestamp,
     });
@@ -81,6 +82,8 @@ class InstanceVm extends _$InstanceVm {
     instances.ace = instanciaMap['municipios']['ace'] as bool;
     instances.acs = instanciaMap['municipios']['acs'] as bool;
     instances.motorista = instanciaMap['municipios']['motorista'] as bool;
+    instances.nome = instanciaMap['municipios']['nome'] as String;
+    instances.url = instanciaMap['municipios']['url'] as String;
 
     if (context.mounted) {
       context.navigator.pop({
@@ -94,15 +97,21 @@ class InstanceVm extends _$InstanceVm {
   Map<String, dynamic> montarObjeto({
     required Map<String, dynamic> instanciaForm,
     required InstanciaModel instance,
-  }) => {
-    'municipios': {
-      'ativo': instanciaForm['ativo'],
-      'ace': instanciaForm['ace'],
-      'acs': instanciaForm['acs'],
-      'motorista': instanciaForm['motorista'],
-      'nome': instance.nome,
-      'url': instance.url,
-      'localidade_id': instance.localidadeId,
-    },
-  };
+  }) {
+    final nomeForm = (instanciaForm['nome'] as String?)?.trim();
+    final urlForm = (instanciaForm['url'] as String?)?.trim();
+
+    return {
+      'municipios': {
+        'ativo': instanciaForm['ativo'],
+        'ace': instanciaForm['ace'],
+        'acs': instanciaForm['acs'],
+        'motorista': instanciaForm['motorista'],
+        'nome':
+            nomeForm == null || nomeForm.isEmpty ? instance.nome : nomeForm,
+        'url': urlForm == null || urlForm.isEmpty ? instance.url : urlForm,
+        'localidade_id': instance.localidadeId,
+      },
+    };
+  }
 }

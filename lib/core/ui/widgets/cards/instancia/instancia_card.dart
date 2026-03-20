@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gestor_fire/core/extensions/build_context_extention.dart';
@@ -31,13 +32,25 @@ class InstanciaCard extends ConsumerWidget {
         children: [
           SlidableAction(
             onPressed: (context) async {
-              // deleteInstance(context: context, instancia: instancia);
+              final idDocumento = instancia.documentoId;
+
+              await Clipboard.setData(ClipboardData(text: idDocumento));
+
+              if (!context.mounted) return;
+
+              context.scaffoldMessenger
+                ..clearSnackBars()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text('ID do documento copiado: $idDocumento'),
+                  ),
+                );
             },
             backgroundColor: Colors.blue.shade100,
-            foregroundColor: Colors.redAccent.shade700,
+            foregroundColor: Colors.blueAccent.shade700,
             borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-            label: 'Deletar',
-            icon: Icons.delete,
+            label: 'Copiar ID',
+            icon: Icons.copy,
           ),
         ],
       ),
