@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-timerSnackbar({
+void timerSnackbar({
   required BuildContext context,
   required String message,
   Widget? buttonPrefixWidget,

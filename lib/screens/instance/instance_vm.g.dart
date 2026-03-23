@@ -6,22 +6,57 @@ part of 'instance_vm.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(InstanceVm)
+final instanceVmProvider = InstanceVmProvider._();
+
+final class InstanceVmProvider
+    extends $NotifierProvider<InstanceVm, InstanceState> {
+  InstanceVmProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'instanceVmProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$instanceVmHash();
+
+  @$internal
+  @override
+  InstanceVm create() => InstanceVm();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(InstanceState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<InstanceState>(value),
+    );
+  }
+}
+
 String _$instanceVmHash() => r'd1a9b1196e0e7cea3da3b7a959c1beefb4ea9ae4';
 
-/// See also [InstanceVm].
-@ProviderFor(InstanceVm)
-final instanceVmProvider =
-    AutoDisposeNotifierProvider<InstanceVm, InstanceState>.internal(
-      InstanceVm.new,
-      name: r'instanceVmProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$instanceVmHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$InstanceVm = AutoDisposeNotifier<InstanceState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$InstanceVm extends $Notifier<InstanceState> {
+  InstanceState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<InstanceState, InstanceState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<InstanceState, InstanceState>,
+              InstanceState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

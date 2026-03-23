@@ -141,7 +141,7 @@ Widget switchField(
                             onChanged?.call(value);
                           }
                           : null,
-                  activeColor: activeColor ?? Colors.green,
+                  activeThumbColor: activeColor ?? Colors.green,
                   activeTrackColor: activeTrackColor ?? Colors.green.shade800,
                 ),
               ],
