@@ -22,7 +22,7 @@ class ListaInstancesVm extends _$ListaInstancesVm {
 
   Future<void> loadData({required UsuarioModel usuario}) async {
     try {
-      List<InstanciaModel> instancias = await listarInstancias();
+      List<InstanciaModel> instancias = await listarInstancias(usuario: usuario);
 
       state = state.copyWith(
         instancias: instancias,
@@ -35,7 +35,52 @@ class ListaInstancesVm extends _$ListaInstancesVm {
     }
   }
 
-  Future<List<InstanciaModel>> listarInstancias() async {
+  String _normalizarTexto(String valor) =>
+      removeDiacritics(valor.toLowerCase().trim());
+
+  bool _isAdministrador(UsuarioModel usuario) {
+    final funcao = _normalizarTexto(usuario.funcao);
+    return funcao == 'administrador' ||
+        funcao == 'adiministrador' ||
+        funcao == 'admin';
+  }
+
+  bool _isDesenvolvedor(UsuarioModel usuario) =>
+      _normalizarTexto(usuario.funcao) == 'desenvolvedor';
+
+  bool _instanciaEhHomologacaoTesteOuDesenvolvimento(
+    InstanciaModel instancia,
+  ) {
+    final urlNormalizada = _normalizarTexto(instancia.url);
+    final nomeNormalizado = _normalizarTexto(instancia.nome);
+
+    bool contemPalavraChave(String texto) =>
+        texto.contains('homologacao') ||
+        texto.contains('teste') ||
+        texto.contains('desenvolvimento');
+
+    return contemPalavraChave(urlNormalizada) ||
+        contemPalavraChave(nomeNormalizado);
+  }
+
+  bool _deveIncluirInstancia({
+    required UsuarioModel usuario,
+    required InstanciaModel instancia,
+  }) {
+    if (_isAdministrador(usuario)) {
+      return true;
+    }
+
+    if (_isDesenvolvedor(usuario)) {
+      return _instanciaEhHomologacaoTesteOuDesenvolvimento(instancia);
+    }
+
+    return true;
+  }
+
+  Future<List<InstanciaModel>> listarInstancias({
+    required UsuarioModel usuario,
+  }) async {
     try {
       final instancesRef = FirebaseFirestore.instance.collection('municipios');
       final querySnapshot = await instancesRef.get();
@@ -48,9 +93,24 @@ class ListaInstancesVm extends _$ListaInstancesVm {
         log('Instancia ID: $docId, Data: $data');
 
         Map<String, dynamic> instanciaMap = {'document_id': docId, ...data};
+        final instancia = InstanciaModel.fromJson(instanciaMap);
 
-        instancias.add(InstanciaModel.fromJson(instanciaMap));
+        if (_deveIncluirInstancia(usuario: usuario, instancia: instancia)) {
+          instancias.add(instancia);
+        }
       }
+
+      instancias.sort((a, b) {
+        final nomeA = _normalizarTexto(a.nome);
+        final nomeB = _normalizarTexto(b.nome);
+
+        final comparacaoNome = nomeA.compareTo(nomeB);
+        if (comparacaoNome != 0) {
+          return comparacaoNome;
+        }
+
+        return a.localidadeId.compareTo(b.localidadeId);
+      });
 
       return instancias;
     } catch (e) {
@@ -91,12 +151,19 @@ class ListaInstancesVm extends _$ListaInstancesVm {
   }) async {
     try {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
+      if (instancia['localidade_id'] is! int) {
+        throw StateError('localidade_id inválido para cadastro de instância.');
+      }
 
-      final instancesRef = FirebaseFirestore.instance.collection('instances');
-      final instanceDocRef = instancesRef.doc();
-      final instanciaPayload = {...instancia};
+      if (state.usuario == null) {
+        throw StateError('Usuário não carregado para registrar log de cadastro.');
+      }
 
-      await instanceDocRef.set(instancia);
+      final municipiosRef = FirebaseFirestore.instance.collection('municipios');
+      final municipioDocRef = await municipiosRef.add(instancia);
+
+      // Garante confirmação no servidor para facilitar diagnóstico de falha.
+      await municipioDocRef.get(const GetOptions(source: Source.server));
 
       final usuarioRef = FirebaseFirestore.instance.collection('usuarios');
 
@@ -112,14 +179,33 @@ class ListaInstancesVm extends _$ListaInstancesVm {
 
       if (context.mounted) {
         Messages.showSuccess(
-          'Instancia de ${instancia['nome']} cadastrada com sucesso',
+          'Instancia de ${instancia['nome']} cadastrada com sucesso (${municipioDocRef.id})',
           context,
         );
       }
-    } catch (erro) {
+    } on FirebaseException catch (erro, stackTrace) {
+      log(
+        'Erro Firebase ao salvar instância em municipios',
+        error: erro,
+        stackTrace: stackTrace,
+      );
+
       if (context.mounted) {
         Messages.showErrors(
-          'Error ao salvar instancia completa, verifica com o desenvolvedor oque acontece',
+          'Erro Firebase [${erro.code}]: ${erro.message ?? 'sem detalhes'}',
+          context,
+        );
+      }
+    } catch (erro, stackTrace) {
+      log(
+        'Erro ao salvar instância em municipios',
+        error: erro,
+        stackTrace: stackTrace,
+      );
+
+      if (context.mounted) {
+        Messages.showErrors(
+          'Erro ao salvar instancia: $erro',
           context,
         );
       }

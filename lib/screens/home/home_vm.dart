@@ -62,8 +62,6 @@ class HomeVm extends _$HomeVm {
 
     final instancesRef = FirebaseFirestore.instance.collection('usuarios');
 
-    final settingsRef = instancesRef.doc(nomeId).collection('logs');
-
     await instancesRef.doc(nomeId).set(userMap);
 
     // await settingsRef.doc(timestamp.toString()).set({
@@ -113,7 +111,7 @@ class HomeVm extends _$HomeVm {
             ),
       );
 
-      if (user.cpf != senha && context.mounted) {
+      if (user.cpf == senha && context.mounted) {
         context.navigator.pushNamed(
           RouteGeneratorKeys.listaInstances,
           arguments: {'reload': true, 'usuario': user},

@@ -30,7 +30,7 @@ class AppMain extends StatelessWidget {
           themeMode: ThemeMode.system,
           navigatorKey: AppNavGlobalKey.instance.navKey,
           navigatorObservers: [asyncNavigatorObserver],
-          initialRoute: RouteGeneratorKeys.path,
+          initialRoute: RouteGeneratorKeys.authLogin,
           onGenerateRoute: RouteGenerator.generateRoute,
         );
       },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gestor_fire/screens/auth/login/login_screen.dart';
 import 'package:gestor_fire/screens/home/home_screen.dart';
 import 'package:gestor_fire/screens/instance/instance_screen.dart';
 import 'package:gestor_fire/screens/lista_instances/lista_instances_screens.dart';
@@ -16,6 +17,12 @@ sealed class RouteGeneratorKeys {
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case RouteGeneratorKeys.path:
+      case RouteGeneratorKeys.authLogin:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const LoginScreen(),
+        );
       case RouteGeneratorKeys.home:
         return MaterialPageRoute(
           settings: settings,
@@ -52,7 +59,7 @@ class RouteGenerator {
         // return _errorRoute();
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => const HomeScreen(),
+          builder: (context) => const LoginScreen(),
         );
     }
   }
