@@ -63,7 +63,7 @@ extension BuildContextExtention on BuildContext {
 
   void timerMessage({
     required String message,
-    Color backgroundColor = Colors.blueAccent,
+    Color? backgroundColor,
     Color? backgroundColorButtonLabel,
     int second = 5,
     Widget buttonPrefixWidget = const SizedBox.shrink(),
@@ -72,7 +72,7 @@ extension BuildContextExtention on BuildContext {
     timerSnackbar(
       context: this,
       message: message,
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor ?? theme.colorScheme.primary,
       buttonPrefixWidget: buttonPrefixWidget,
       buttonLabel: buttonLabel,
       backgroundColorButtonLabel: backgroundColorButtonLabel,

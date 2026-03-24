@@ -78,7 +78,7 @@ class _InstanceScreenState extends ConsumerState<InstanceScreen> {
                                     ?.copyWith(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.blueAccent,
+                                      color: context.theme.colorScheme.primary,
                                   ),
                               ),
                             ),

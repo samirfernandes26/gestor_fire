@@ -32,8 +32,8 @@ class SolicitaSenhaUsuarioDialog extends StatelessWidget {
               children: [
                 Text(
                   'Informe a senha para liberação',
-                  style: const TextStyle(
-                    color: Colors.blueAccent,
+                  style: TextStyle(
+                    color: context.theme.colorScheme.primary,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
@@ -63,7 +63,7 @@ class SolicitaSenhaUsuarioDialog extends StatelessWidget {
                 Button(
                   textButton: 'Entrar',
                   colorText: Colors.white,
-                  colorButton: Colors.blueAccent,
+                  colorButton: context.theme.colorScheme.primary,
                   fontWeight: FontWeight.w700,
                   onPressed: () async {
                     switch (formKey.currentState?.saveAndValidate()) {

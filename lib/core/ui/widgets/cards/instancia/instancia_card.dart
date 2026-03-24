@@ -46,8 +46,8 @@ class InstanciaCard extends ConsumerWidget {
                   ),
                 );
             },
-            backgroundColor: Colors.blue.shade100,
-            foregroundColor: Colors.blueAccent.shade700,
+            foregroundColor: context.theme.colorScheme.primary,
+            backgroundColor: context.theme.colorScheme.primaryContainer,
             borderRadius: const BorderRadius.all(Radius.circular(16.0)),
             label: 'Copiar ID',
             icon: Icons.copy,
@@ -89,7 +89,7 @@ class InstanciaCard extends ConsumerWidget {
                                     fontWeight: FontWeight.bold,
                                     color:
                                         context.brightness == Brightness.light
-                                            ? Colors.blueAccent
+                                            ? context.theme.colorScheme.primary
                                             : Colors.white,
                                   ),
                             ),

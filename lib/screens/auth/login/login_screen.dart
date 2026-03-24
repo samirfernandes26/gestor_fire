@@ -46,7 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         'Acesso ao sistema',
                         textAlign: TextAlign.center,
                         style: context.theme.textTheme.titleLarge?.copyWith(
-                          color: Colors.blueAccent,
+                          color: context.theme.colorScheme.primary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -94,7 +94,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Button(
                         textButton: isLoading ? 'Entrando...' : 'Entrar',
                         colorText: Colors.white,
-                        colorButton: Colors.blueAccent,
+                        colorButton: context.theme.colorScheme.primary,
                         fontWeight: FontWeight.w700,
                         onPressed: () async {
                           if (isLoading) return;

@@ -23,8 +23,8 @@ Widget radioGroup<T>(
       children: [
         Text(
           '$label ${isRequired == true ? '*' : ''}',
-          style: const TextStyle(
-            color: Colors.blueAccent,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),
@@ -123,8 +123,8 @@ Widget switchField(
           children: [
             Text(
               '$label ${isRequired == true ? '*' : ''}',
-              style: const TextStyle(
-                color: Colors.blueAccent,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
               ),
@@ -181,8 +181,8 @@ Widget selectField<T>(
       children: [
         Text(
           '$label ${isRequired == true ? '*' : ''}',
-          style: const TextStyle(
-            color: Colors.blueAccent,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),
@@ -235,8 +235,8 @@ Widget textField<T>(
       children: [
         Text(
           '$label ${isRequired == true ? '*' : ''}',
-          style: const TextStyle(
-            color: Colors.blueAccent,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),

@@ -33,8 +33,8 @@ class CadastroUsuarioDialog extends StatelessWidget {
               children: [
                 Text(
                   'Cadastro de Usuário',
-                  style: const TextStyle(
-                    color: Colors.blueAccent,
+                  style: TextStyle(
+                    color: context.theme.colorScheme.primary,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
@@ -117,7 +117,7 @@ class CadastroUsuarioDialog extends StatelessWidget {
                 Button(
                   textButton: 'Cadastrar',
                   colorText: Colors.white,
-                  colorButton: Colors.blueAccent,
+                  colorButton: context.theme.colorScheme.primary,
                   fontWeight: FontWeight.w700,
                   onPressed: () async {
                     switch (formKey.currentState?.saveAndValidate()) {

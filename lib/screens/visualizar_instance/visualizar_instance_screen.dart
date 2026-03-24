@@ -42,7 +42,6 @@ class _VisualizarInstanceScreenState
       child: Scaffold(
         appBar: AppBar(title: const Text('Vizuallizar Instancia')),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blueAccent,
           onPressed: () async {
             final result = await context.navigator.pushNamed(
               RouteGeneratorKeys.instanceScreen,
@@ -89,7 +88,7 @@ class _VisualizarInstanceScreenState
                       style: context.theme.textTheme.bodySmall?.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blueAccent,
+                        color: context.theme.colorScheme.primary,
                       ),
                     ),
                   ),
@@ -100,7 +99,7 @@ class _VisualizarInstanceScreenState
                     icon: Icons.badge,
                     label: 'Nome Instacia Exibido',
                     description: instancia?.nome.toUpperCase(),
-                    color: Colors.blue,
+                    color: context.theme.colorScheme.primary,
                   ),
                   SizedBox(height: 16),
                   _rowInfo(
@@ -108,7 +107,7 @@ class _VisualizarInstanceScreenState
                     icon: Icons.person,
                     label: 'Localidade ID',
                     description: instancia?.localidadeId.toString(),
-                    color: Colors.blue,
+                    color: context.theme.colorScheme.primary,
                   ),
 
                   SizedBox(height: 16),
@@ -117,7 +116,7 @@ class _VisualizarInstanceScreenState
                     icon: Icons.phone,
                     label: 'Instancia Ativa',
                     description: instancia?.ativo == true ? 'Sim' : 'Não',
-                    color: Colors.blue,
+                    color: context.theme.colorScheme.primary,
                   ),
 
                   SizedBox(height: 16),
@@ -129,7 +128,7 @@ class _VisualizarInstanceScreenState
                         instancia?.acs == true
                             ? 'Em Funcionamento'
                             : 'Desativado',
-                    color: Colors.blue,
+                    color: context.theme.colorScheme.primary,
                   ),
 
                   SizedBox(height: 16),
@@ -141,7 +140,7 @@ class _VisualizarInstanceScreenState
                         instancia?.ace == true
                             ? 'Em Funcionamento'
                             : 'Desativado',
-                    color: Colors.blue,
+                    color: context.theme.colorScheme.primary,
                   ),
 
                   SizedBox(height: 16),
@@ -153,7 +152,7 @@ class _VisualizarInstanceScreenState
                         instancia?.motorista == true
                             ? 'Em Funcionamento'
                             : 'Desativado',
-                    color: Colors.blue,
+                    color: context.theme.colorScheme.primary,
                   ),
 
                   SizedBox(height: 16),
@@ -162,7 +161,7 @@ class _VisualizarInstanceScreenState
                     icon: Icons.link,
                     label: 'URL de Acesso',
                     description: instancia?.url,
-                    color: Colors.blue,
+                    color: context.theme.colorScheme.primary,
                   ),
                   SizedBox(height: 16),
                 ],
@@ -189,7 +188,7 @@ Widget _rowInfo(
       if (icon != null)
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
-          child: Icon(icon, color: color ?? Colors.blue),
+          child: Icon(icon, color: color ?? context.theme.colorScheme.primary),
         ),
       Expanded(
         child: Column(
@@ -199,7 +198,7 @@ Widget _rowInfo(
               label,
               overflow: overflow ?? TextOverflow.visible,
               style: context.theme.textTheme.titleMedium?.copyWith(
-                color: color ?? Colors.blue,
+                color: color ?? context.theme.colorScheme.primary,
               ),
             ),
             Text(

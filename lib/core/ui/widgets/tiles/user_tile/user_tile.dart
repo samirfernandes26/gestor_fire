@@ -53,7 +53,7 @@ class TileUser extends StatelessWidget {
                                     Text(
                                       'Nome:',
                                       style: TextStyle(
-                                        color: Colors.blueAccent,
+                                        color: context.theme.colorScheme.primary,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -64,7 +64,7 @@ class TileUser extends StatelessWidget {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        color: Colors.blueAccent,
+                                        color: context.theme.colorScheme.primary,
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -78,7 +78,7 @@ class TileUser extends StatelessWidget {
                                     Text(
                                       'Função:',
                                       style: TextStyle(
-                                        color: Colors.blueAccent,
+                                        color: context.theme.colorScheme.primary,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -89,7 +89,7 @@ class TileUser extends StatelessWidget {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        color: Colors.blueAccent,
+                                        color: context.theme.colorScheme.primary,
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
                                       ),

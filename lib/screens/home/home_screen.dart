@@ -40,7 +40,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(title: const Text('Home')),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blueAccent,
           onPressed: () async {
             await addUsuarios(context: context, formKey: formKey);
           },

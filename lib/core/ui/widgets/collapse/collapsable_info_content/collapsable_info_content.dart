@@ -54,7 +54,7 @@ class _CollapsableInfoContent extends State<CollapsableInfoContent> {
                   Text(
                     widget.title!,
                     style: context.theme.textTheme.titleMedium?.copyWith(
-                      color: Colors.blue,
+                      color: context.theme.colorScheme.primary,
                     ),
                   ),
                   const Divider(),
@@ -75,7 +75,7 @@ class _CollapsableInfoContent extends State<CollapsableInfoContent> {
                   title,
                   textAlign: TextAlign.center,
                   style: context.theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.blue,
+                    color: context.theme.colorScheme.primary,
                   ),
                 ),
                 shape: Border.all(color: Colors.transparent),

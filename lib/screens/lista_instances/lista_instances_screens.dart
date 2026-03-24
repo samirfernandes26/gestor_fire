@@ -68,7 +68,6 @@ class _ListaInstancesScreenState extends ConsumerState<ListaInstancesScreen> {
         floatingActionButton:
             usuarioEhAdministrador
                 ? FloatingActionButton(
-                  backgroundColor: Colors.blueAccent,
                   onPressed: () async {
                     await newInstance(context: context, formKey: formKey);
                   },
