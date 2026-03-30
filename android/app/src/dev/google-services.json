@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "317933760820",
+    "project_id": "versas-aplicativos-homologacao",
+    "storage_bucket": "versas-aplicativos-homologacao.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317933760820:android:0dc6694b8e65b3d34d7561",
+        "android_client_info": {
+          "package_name": "br.com.versasaude.acs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5suD42VQDRwaDAKlpvUiUqmzN1TDUf4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317933760820:android:ca873c27ea02d4d14d7561",
+        "android_client_info": {
+          "package_name": "br.com.versasaude.motorista"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5suD42VQDRwaDAKlpvUiUqmzN1TDUf4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317933760820:android:0c8b6731fde967474d7561",
+        "android_client_info": {
+          "package_name": "com.gestor_fire.gestor_fire"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5suD42VQDRwaDAKlpvUiUqmzN1TDUf4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

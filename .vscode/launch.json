@@ -4,23 +4,43 @@
     // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
         {
-            "name": "gestor_fire",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "gestor_fire (profile mode)",
+            "name": "gestor_fire (dev)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "toolArgs": [
+                "--flavor",
+                "dev"
+            ]
         },
         {
-            "name": "gestor_fire (release mode)",
+            "name": "gestor_fire (prod)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "toolArgs": [
+                "--flavor",
+                "prod"
+            ]
+        },
+        {
+            "name": "gestor_fire (dev profile)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "toolArgs": [
+                "--flavor",
+                "dev"
+            ]
+        },
+        {
+            "name": "gestor_fire (prod release)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "toolArgs": [
+                "--flavor",
+                "prod"
+            ]
         }
     ]
 }

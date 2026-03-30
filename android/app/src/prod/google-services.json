@@ -1,0 +1,138 @@
+{
+  "project_info": {
+    "project_number": "74773279738",
+    "project_id": "versasaude-acs",
+    "storage_bucket": "versasaude-acs.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74773279738:android:dc51c0ca76f26be0ed6a43",
+        "android_client_info": {
+          "package_name": "br.com.versasaude.ace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74773279738-6er63lrd234re023d5islvtafsf2a9vf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZGHSRRR0YKzpicectuy9QLaggDpzmIxQ"
+        },
+        {
+          "current_key": "AIzaSyD--ypaOcGUvQ_IlTgSwOl7FJhm44tqmcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74773279738-6er63lrd234re023d5islvtafsf2a9vf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74773279738:android:7d5ddf30b752e534ed6a43",
+        "android_client_info": {
+          "package_name": "br.com.versasaude.acs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74773279738-6er63lrd234re023d5islvtafsf2a9vf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZGHSRRR0YKzpicectuy9QLaggDpzmIxQ"
+        },
+        {
+          "current_key": "AIzaSyD--ypaOcGUvQ_IlTgSwOl7FJhm44tqmcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74773279738-6er63lrd234re023d5islvtafsf2a9vf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74773279738:android:eb62503208b06cceed6a43",
+        "android_client_info": {
+          "package_name": "br.com.versasaude.motorista"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74773279738-6er63lrd234re023d5islvtafsf2a9vf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZGHSRRR0YKzpicectuy9QLaggDpzmIxQ"
+        },
+        {
+          "current_key": "AIzaSyD--ypaOcGUvQ_IlTgSwOl7FJhm44tqmcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74773279738-6er63lrd234re023d5islvtafsf2a9vf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74773279738:android:28e58193aaf85d59ed6a43",
+        "android_client_info": {
+          "package_name": "com.gestor_fire.gestor_fire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74773279738-6er63lrd234re023d5islvtafsf2a9vf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZGHSRRR0YKzpicectuy9QLaggDpzmIxQ"
+        },
+        {
+          "current_key": "AIzaSyD--ypaOcGUvQ_IlTgSwOl7FJhm44tqmcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74773279738-6er63lrd234re023d5islvtafsf2a9vf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

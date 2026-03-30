@@ -7,12 +7,19 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_fire/app_main.dart';
+import 'package:gestor_fire/core/flavors/app_flavor.dart';
 import 'package:gestor_fire/firebase_options.dart';
+import 'package:gestor_fire/firebase_options_dev.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final firebaseOptions =
+      AppFlavorConfig.current.isDevelopment
+          ? DefaultFirebaseOptionsDev.currentPlatform
+          : DefaultFirebaseOptions.currentPlatform;
+
+  await Firebase.initializeApp(options: firebaseOptions);
 
   final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
 
